@@ -365,11 +365,11 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     if (entry.isIntersecting) {
       setTimeout(() => {
         entry.target.classList.add('active');
-      }, 300); // หน่วงเวลา 300ms ก่อนเปิด
+      }, 1000); // หน่วงเวลา 300ms ก่อนเปิด
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.85 }); // เห็นเกือบเต็มกล่องก่อนเปิด
+}, { threshold: 1.0 }); // เห็นเกือบเต็มกล่องก่อนเปิด
 
 document.querySelectorAll('.product-box').forEach(box => {
   observer.observe(box);
