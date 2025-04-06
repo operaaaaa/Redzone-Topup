@@ -6,36 +6,32 @@
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-  body::before, body::after {
+  
+  /* เอฟเฟกต์ไฟวับ ๆ เบา ๆ รอบเว็บ */
+body::before {
   content: "";
   position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -50px;
+  left: -50px;
+  width: calc(100% + 100px);
+  height: calc(100% + 100px);
   pointer-events: none;
+  background: radial-gradient(circle at center, rgba(255, 60, 60, 0.07) 0%, transparent 70%);
+  animation: flameGlow 6s ease-in-out infinite;
+  z-index: 0;
 }
 
-body::before {
-  background: radial-gradient(circle, rgba(255,0,0,0.2) 10%, transparent 70%);
-  animation: firePulse 3s infinite ease-in-out;
-}
-
-body::after {
-  background: url('https://i.gifer.com/YCZH.gif') center center / cover no-repeat;
-  opacity: 0.06;
-  mix-blend-mode: screen;
-}
-
-@keyframes firePulse {
+@keyframes flameGlow {
   0%, 100% {
-    box-shadow: 0 0 30px #ff0000, inset 0 0 30px #ff0000;
+    box-shadow: 0 0 10px rgba(255, 30, 30, 0.3), 0 0 20px rgba(255, 60, 60, 0.2);
+    opacity: 0.4;
   }
   50% {
-    box-shadow: 0 0 60px #ff4c4c, inset 0 0 60px #ff4c4c;
+    box-shadow: 0 0 25px rgba(255, 80, 80, 0.5), 0 0 50px rgba(255, 100, 100, 0.3);
+    opacity: 0.7;
   }
 }
+  
     * {
       box-sizing: border-box;
     }
