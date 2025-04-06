@@ -6,6 +6,36 @@
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
+  body::before, body::after {
+  content: "";
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+body::before {
+  background: radial-gradient(circle, rgba(255,0,0,0.2) 10%, transparent 70%);
+  animation: firePulse 3s infinite ease-in-out;
+}
+
+body::after {
+  background: url('https://i.gifer.com/YCZH.gif') center center / cover no-repeat;
+  opacity: 0.06;
+  mix-blend-mode: screen;
+}
+
+@keyframes firePulse {
+  0%, 100% {
+    box-shadow: 0 0 30px #ff0000, inset 0 0 30px #ff0000;
+  }
+  50% {
+    box-shadow: 0 0 60px #ff4c4c, inset 0 0 60px #ff4c4c;
+  }
+}
     * {
       box-sizing: border-box;
     }
