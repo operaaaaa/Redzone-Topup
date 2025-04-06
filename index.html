@@ -121,31 +121,7 @@ button[type="submit"]:hover {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px red;
-  }
-  100% {
-    box-shadow: 0 0 20px red;
-  }
-}
 
-.product-box.active {
-  animation: glow 0.5s ease forwards;
-}
-.product-box {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.5s ease, opacity 0.5s ease, box-shadow 0.3s ease;
-  box-shadow: none;
-}
-
-.product-box.active {
-  max-height: 500px; /* ปรับตามเนื้อหา */
-  opacity: 1;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* ไฟเรืองแสงแดง */
-}
     .section {
       background: #1c1c1c;
       border: 2px solid #ff4c4c;
@@ -267,10 +243,47 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   background: none;
   border: none;
 }
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px red;
+  }
+  100% {
+    box-shadow: 0 0 20px red;
+  }
+}
+
+.product-box.active {
+  animation: glow 0.5s ease forwards;
+}
+.product-box {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease, box-shadow 0.3s ease;
+  box-shadow: none;
+}
+
+.product-box.active {
+  max-height: 500px; /* ปรับตามเนื้อหา */
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* ไฟเรืองแสงแดง */
+}
+  .fit-image {
+    width: 100%;   /* ทำให้กว้างสุดตามพื้นที่ที่กำหนด */
+    max-width: 100%; /* จำกัดขนาดไม่ให้เกินขนาดของ container */
+    height: auto;   /* ปรับความสูงอัตโนมัติเพื่อรักษาสัดส่วน */
+  }
   </style>
 </head>
 <body>
   <!-- Advertisement Popup -->
+<div id="adPopup" class="ad-popup">
+  <div class="ad-popup-content">
+    <span class="close-btn" onclick="closeAdPopup()">×</span>
+    <img src="att.npWMIELyXVouaitsU3dr6zm-MIO0bVGPsciwx-LOtQE.jpeg" alt="Image description" class="fit-image">
+      <button onclick="closeAdPopup()">ปิดหน้าต่างนี้</button>
+      </div>
+</div>
   <div class="container">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <div class="title">RedZone Topup</div>
@@ -383,9 +396,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     });
   });
 
-  // ระบบเลื่อนแล้วเปิดอัตโนมัติ
-  
-
   // Dynamic product options
   const products = {
     "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
@@ -446,11 +456,9 @@ window.onload = function() {
 };
 
 // Function to close the ad popup when the user clicks the close button
-  // ฟังก์ชันสำหรับปิดหน้าต่างโฆษณา
-  
-
-
-
+function closeAdPopup() {
+  document.getElementById("adPopup").style.display = "none";
+}
 </script>
 </body>
-</html>
+</html> 
