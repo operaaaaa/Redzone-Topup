@@ -7,59 +7,7 @@
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-  .wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 50px auto;
-    }
-    .wheel {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      position: absolute;
-      transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-    }
-    .wheel .segment {
-      width: 50%;
-      height: 50%;
-      background-color: #f00;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform-origin: 0% 100%;
-      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-    }
-    .wheel .segment:nth-child(odd) {
-      background-color: #0f0;
-    }
-    .wheel .segment:nth-child(2) {
-      transform: rotate(45deg);
-    }
-    .wheel .segment:nth-child(3) {
-      transform: rotate(90deg);
-    }
-    .wheel .segment:nth-child(4) {
-      transform: rotate(135deg);
-    }
-    .wheel .segment:nth-child(5) {
-      transform: rotate(180deg);
-    }
-    .wheel .segment:nth-child(6) {
-      transform: rotate(225deg);
-    }
-    .wheel .segment:nth-child(7) {
-      transform: rotate(270deg);
-    }
-    .wheel .segment:nth-child(8) {
-      transform: rotate(315deg);
-    }
-    .spin-button {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 1.2em;
-    }
+
   input, select, textarea {
   background: #111;
   border: 1px solid #ff4c4c;
@@ -264,12 +212,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <h4>@redzone_topup</h4>
-  <div class="wheel-container">
-    <div class="wheel" id="wheel">
-      <!-- ส่วนของวงล้อจะถูกสร้างโดย JavaScript -->
-    </div>
-  </div>
-  <button class="spin-button" onclick="spinWheel()">หมุนวงล้อ</button>
     <div class="section">
       <h3>รายการสินค้า</h3>
       <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด<h5>
@@ -429,54 +371,7 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     document.getElementById('orderForm').reset();
     document.getElementById('orderSuccess').style.display = 'block';
   });
-      const prizes = [
-      { name: 'รางวัลที่ 1', percentage: 10 },
-      { name: 'รางวัลที่ 2', percentage: 20 },
-      { name: 'รางวัลที่ 3', percentage: 30 },
-      { name: 'รางวัลที่ 4', percentage: 40 }
-    ];
 
-    const wheel = document.getElementById('wheel');
-
-    function createWheel() {
-      const totalSegments = prizes.length;
-      const segmentAngle = 360 / totalSegments;
-      prizes.forEach((prize, index) => {
-        const segment = document.createElement('div');
-        segment.classList.add('segment');
-        segment.style.transform = `rotate(${index * segmentAngle}deg)`;
-        segment.textContent = prize.name;
-        wheel.appendChild(segment);
-      });
-    }
-
-    function spinWheel() {
-      const random = Math.random() * 100;
-      let cumulativePercentage = 0;
-      let selectedPrizeIndex = 0;
-
-      for (let i = 0; i < prizes.length; i++) {
-        cumulativePercentage += prizes[i].percentage;
-        if (random <= cumulativePercentage) {
-          selectedPrizeIndex = i;
-          break;
-        }
-      }
-
-      const totalSegments = prizes.length;
-      const segmentAngle = 360 / totalSegments;
-      const randomRotation = 360 * 5; // หมุน 5 รอบก่อนหยุด
-      const prizeRotation = selectedPrizeIndex * segmentAngle;
-      const totalRotation = randomRotation + prizeRotation;
-
-      wheel.style.transform = `rotate(-${totalRotation}deg)`;
-
-      setTimeout(() => {
-        alert(`คุณได้รับ ${prizes[selectedPrizeIndex].name}`);
-      }, 4000); // รอให้การหมุนเสร็จก่อนแสดงผล
-    }
-
-    createWheel();
 </script>
 
 
