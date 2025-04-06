@@ -121,7 +121,31 @@ button[type="submit"]:hover {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px red;
+  }
+  100% {
+    box-shadow: 0 0 20px red;
+  }
+}
 
+.product-box.active {
+  animation: glow 0.5s ease forwards;
+}
+.product-box {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease, box-shadow 0.3s ease;
+  box-shadow: none;
+}
+
+.product-box.active {
+  max-height: 500px; /* ปรับตามเนื้อหา */
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* ไฟเรืองแสงแดง */
+}
     .section {
       background: #1c1c1c;
       border: 2px solid #ff4c4c;
@@ -365,19 +389,15 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     if (entry.isIntersecting) {
       setTimeout(() => {
         entry.target.classList.add('active');
-      }, 1000); // หน่วงเวลา 300ms ก่อนเปิด
+      }, 300); // ดีเลย์ 0.3 วินาทีก่อนแสดง
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 1.0 }); // เห็นเกือบเต็มกล่องก่อนเปิด
+}, { threshold: 0.85 });
 
 document.querySelectorAll('.product-box').forEach(box => {
   observer.observe(box);
 });
-
-  document.querySelectorAll('.product-box').forEach(box => {
-    observer.observe(box);
-  });
 
   // Dynamic product options
   const products = {
