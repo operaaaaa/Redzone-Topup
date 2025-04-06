@@ -1,196 +1,234 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รีวิวร้าน RedZone Topup</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
-            padding: 20px;
-            margin: 0;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo {
-            width: 150px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            filter: brightness(0) invert(1);
-        }
-        .reviews {
-            margin-top: 20px;
-            background-color: #1f1f1f;
-            border: 1px solid #444;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        .reviews h3 {
-            margin-bottom: 10px;
-            color: #ff4c4c;
-            text-shadow: 1px 1px 5px #fff;
-        }
-        .stars {
-            font-size: 25px;
-            color: #ffcc00;
-            cursor: pointer;
-        }
-        .stars:hover {
-            color: #ff4c4c;
-        }
-        .comment-box {
-            margin-top: 10px;
-            padding: 10px;
-            width: 100%;
-            background-color: #2a2a2a;
-            border-radius: 5px;
-            color: #fff;
-        }
-        .average-rating {
-            font-size: 18px;
-            margin-top: 10px;
-        }
-        .review-list {
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: scroll;
-        }
-        .review-item {
-            background-color: #333;
-            margin: 5px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .review-date {
-            font-size: 12px;
-            color: #bbb;
-        }
-        .review-comment {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #fff;
-        }
-        .submit-btn {
-            background-color: #ff4c4c;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .submit-btn:hover {
-            background-color: #ff6666;
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>รีวิวร้าน RedZone Topup</title>
+  <style>
+    body {
+      background-color: #0e0e0e;
+      font-family: 'Prompt', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(to right, #111, #1a0000);
+      box-shadow: 0 0 30px red;
+    }
+
+    .logo {
+      width: 120px;
+      filter: drop-shadow(0 0 8px red);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
+    }
+
+    h1 {
+      color: #ff3b3b;
+      text-shadow: 0 0 10px white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #1a1a1a;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+
+    .stars {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .star {
+      font-size: 35px;
+      color: #888;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .star:hover,
+    .star.active {
+      color: gold;
+      text-shadow: 0 0 10px #ff0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: white;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #ff3b3b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff5e5e;
+    }
+
+    .review-stats {
+      margin: 25px 0;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .review-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .review-item {
+      background-color: #2a2a2a;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+
+    .review-date {
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      margin: 30px 0 10px;
+    }
+
+    .ig-logo {
+      width: 40px;
+      cursor: pointer;
+      filter: drop-shadow(0 0 5px white);
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
 </head>
 <body>
 
-    <header>
-        <h2 style="color: #ff4c4c; text-shadow: 1px 1px 5px #fff;">รีวิวร้าน RedZone Topup</h2>
-        <img src="https://www.example.com/logo.png" alt="ร้าน Logo" class="logo" onclick="window.location.href='https://www.instagram.com/redzone_topup?igsh=MXY1Z3FidjFnbmVlOA%3D%3D&utm_source=qr'">
-    </header>
+  <header>
+    <img src="https://www.example.com/logo.png" alt="RedZone Logo" class="logo" onclick="window.location.href='https://www.instagram.com/redzone_topup?igsh=MXY1Z3FidjFnbmVlOA%3D%3D&utm_source=qr'">
+    <h1>รีวิวร้าน RedZone Topup</h1>
+  </header>
 
-    <div class="reviews">
-        <h3>กรุณากดรีวิวร้าน</h3>
-        <div class="stars" onclick="submitReview(5)">★★★★★</div>
-        <div class="stars" onclick="submitReview(4)">★★★★☆</div>
-        <div class="stars" onclick="submitReview(3)">★★★☆☆</div>
-        <div class="stars" onclick="submitReview(2)">★★☆☆☆</div>
-        <div class="stars" onclick="submitReview(1)">★☆☆☆☆</div>
-
-        <textarea id="comment" class="comment-box" placeholder="เพิ่มคอมเม้นท์ของคุณที่นี่..."></textarea>
-        <button class="submit-btn" onclick="submitReview()">ส่งรีวิว</button>
-        <p class="average-rating">คะแนนเฉลี่ย: <span id="average-rating">กำลังคำนวณ...</span></p>
+  <div class="container">
+    <div class="stars" id="starContainer">
+      <span class="star" data-value="1">★</span>
+      <span class="star" data-value="2">★</span>
+      <span class="star" data-value="3">★</span>
+      <span class="star" data-value="4">★</span>
+      <span class="star" data-value="5">★</span>
     </div>
 
-    <div class="review-list">
-        <h3>รีวิวทั้งหมด</h3>
-        <div id="reviews"></div>
+    <textarea id="comment" placeholder="แสดงความคิดเห็น (ไม่บังคับ)"></textarea>
+    <button onclick="submitReview()">ส่งรีวิว</button>
+
+    <div class="review-stats">
+      <div>คะแนนเฉลี่ย: <span id="avgRating">-</span></div>
+      <div>จำนวนผู้รีวิว: <span id="reviewCount">-</span></div>
     </div>
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-            authDomain: "redzone-topup-852a2.firebaseapp.com",
-            projectId: "redzone-topup-852a2",
-            storageBucket: "redzone-topup-852a2.firebasestorage.app",
-            messagingSenderId: "209606560486",
-            appId: "1:209606560486:web:d12baa8545d99adad14927",
-            measurementId: "G-T1WWTKDY79"
-        };
+    <div class="review-list" id="reviewList"></div>
+  </div>
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
+  <div class="footer">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="ig-logo"
+         onclick="window.location.href='https://www.instagram.com/redzone_topup?igsh=MXY1Z3FidjFnbmVlOA%3D%3D&utm_source=qr'"/>
+  </div>
 
-        // ฟังก์ชันเพื่อบันทึกรีวิวจากลูกค้า
-        function submitReview(rating) {
-            const comment = document.getElementById("comment").value;
-            const reviewRef = db.collection('reviews');
-            const newReview = {
-                rating: rating,
-                comment: comment,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+      authDomain: "redzone-topup-852a2.firebaseapp.com",
+      projectId: "redzone-topup-852a2",
+      storageBucket: "redzone-topup-852a2.appspot.com",
+      messagingSenderId: "209606560486",
+      appId: "1:209606560486:web:d12baa8545d99adad14927",
+      measurementId: "G-T1WWTKDY79"
+    };
 
-            // บันทึกรีวิวลงใน Firestore
-            reviewRef.add(newReview)
-                .then(() => {
-                    console.log("รีวิวถูกบันทึกสำเร็จ");
-                    document.getElementById("comment").value = ''; // ล้างช่องคอมเม้นท์
-                    // หลังจากบันทึกรีวิว ให้รีเฟรชข้อมูลรีวิว
-                    loadReviews();
-                })
-                .catch((error) => {
-                    console.error("Error adding review: ", error);
-                });
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let selectedRating = 0;
+
+    document.querySelectorAll('.star').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.value);
+        document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+        for (let i = 0; i < selectedRating; i++) {
+          document.querySelectorAll('.star')[i].classList.add('active');
         }
+      });
+    });
 
-        // ฟังก์ชันในการโหลดรีวิวทั้งหมด
-        function loadReviews() {
-            const reviewRef = db.collection('reviews');
-            reviewRef.orderBy('timestamp', 'desc').get()
-                .then((querySnapshot) => {
-                    let reviewsHTML = '';
-                    let totalRating = 0;
-                    let reviewCount = querySnapshot.size;
+    function submitReview() {
+      if (selectedRating === 0) return alert("กรุณาเลือกจำนวนดาวก่อนส่งรีวิว");
 
-                    querySnapshot.forEach((doc) => {
-                        const review = doc.data();
-                        const date = new Date(review.timestamp.seconds * 1000).toLocaleString();
-                        reviewsHTML += `<div class="review-item">
-                                            <div>คะแนน: ${"★".repeat(review.rating)}</div>
-                                            <p class="review-comment">${review.comment}</p>
-                                            <p class="review-date">รีวิวเมื่อ: ${date}</p>
-                                          </div>`;
-                        totalRating += review.rating;
-                    });
+      const comment = document.getElementById("comment").value;
+      db.collection("reviews").add({
+        rating: selectedRating,
+        comment: comment,
+        timestamp: new Date()
+      }).then(() => {
+        document.getElementById("comment").value = '';
+        selectedRating = 0;
+        document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+        loadReviews();
+      });
+    }
 
-                    // คำนวณคะแนนเฉลี่ย
-                    const averageRating = totalRating / reviewCount;
-                    document.getElementById("average-rating").textContent = averageRating.toFixed(2);
+    function loadReviews() {
+      db.collection("reviews").orderBy("timestamp", "desc").get().then(snapshot => {
+        let total = 0;
+        let html = '';
 
-                    // แสดงรีวิว
-                    document.getElementById("reviews").innerHTML = reviewsHTML;
-                })
-                .catch((error) => {
-                    console.error("Error getting reviews: ", error);
-                });
-        }
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const stars = "★".repeat(data.rating) + "☆".repeat(5 - data.rating);
+          const date = new Date(data.timestamp.seconds * 1000).toLocaleString('th-TH');
+          html += `<div class="review-item">
+                    <strong>ให้คะแนน: ${stars}</strong>
+                    <p>${data.comment || '(ไม่มีข้อความ)'}</p>
+                    <div class="review-date">เมื่อ: ${date}</div>
+                  </div>`;
+          total += data.rating;
+        });
 
-        // โหลดรีวิวเมื่อหน้าเว็บถูกโหลด
-        window.onload = loadReviews;
-    </script>
+        document.getElementById("reviewList").innerHTML = html;
+        document.getElementById("reviewCount").textContent = snapshot.size;
+        document.getElementById("avgRating").textContent = (total / snapshot.size).toFixed(2);
+      });
+    }
+
+    window.onload = loadReviews;
+  </script>
 </body>
 </html>
