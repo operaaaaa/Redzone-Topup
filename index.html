@@ -6,14 +6,18 @@
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: 'Orbitron', sans-serif;
       background: linear-gradient(120deg, #0d0d0d, #1c1c1c);
       color: #fff;
       text-align: center;
-      overflow-x: hidden;
       animation: pulseGlow 10s infinite;
+      min-height: 100vh;
     }
 
     @keyframes pulseGlow {
@@ -21,24 +25,33 @@
       50% { box-shadow: 0 0 40px #ff4c4c; }
     }
 
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
+      padding: 15px;
+    }
+
     .logo {
-      width: 120px;
+      width: 30%;
+      max-width: 120px;
       filter: drop-shadow(0 0 8px red);
       cursor: pointer;
-      margin-top: 10px;
+      margin: 20px auto 10px;
+      display: block;
     }
 
     .title {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #ff4c4c;
       text-shadow: 0 0 15px white;
-      margin: 5px 0 20px;
+      margin-bottom: 10px;
     }
 
     .status {
-      font-size: 14px;
-      margin-bottom: 20px;
+      font-size: 0.9rem;
       color: #ddd;
+      margin-bottom: 20px;
     }
 
     .status span {
@@ -48,183 +61,109 @@
 
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
+      50% { opacity: 0.3; }
     }
 
     .section {
       background: #1c1c1c;
-      border: 1px solid #ff4c4c;
-      border-radius: 10px;
-      padding: 20px;
+      border: 2px solid #ff4c4c;
+      border-radius: 15px;
+      padding: 25px 20px;
       margin: 20px auto;
-      max-width: 700px;
-      box-shadow: 0 0 15px #ff000066;
+      box-shadow: 0 0 25px #ff000088;
     }
 
-    h3 {
+    .product-box {
+      border: 1px solid #ff4c4c;
+      border-radius: 12px;
+      margin: 15px 0;
+      padding: 15px;
+      background-color: #111;
+      box-shadow: 0 0 12px #ff4c4c44;
+      text-align: left;
+    }
+
+    .product-box strong {
       color: #ff4c4c;
-      text-shadow: 0 0 5px #fff;
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 10px;
+      text-shadow: 0 0 6px white;
     }
 
-    .product-list p {
-      margin: 5px 0;
+    .product-box p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+      color: #ccc;
     }
 
     .insta {
       margin-top: 30px;
       cursor: pointer;
       filter: drop-shadow(0 0 6px white);
+      width: 40px;
     }
 
     @media (max-width: 480px) {
+      .title {
+        font-size: 1.7rem;
+      }
+
+      .status {
+        font-size: 0.8rem;
+      }
+
       .section {
         padding: 15px;
       }
 
-      .logo {
-        width: 100px;
+      .product-box p {
+        font-size: 0.85rem;
       }
     }
   </style>
 </head>
 <body>
-  <img src="https://www.example.com/logo.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
-  <div class="title">RedZone Topup</div>
-  <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
+  <div class="container">
+    <img src="https://www.example.com/logo.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
+    <div class="title">RedZone Topup</div>
+    <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
 
-  <div class="section">
-    <h3>รายการสินค้า</h3>
-    <div class="product-list">
-      <p><strong>RoV</strong> (Garena คูปอง)</p>
-      <p>• 50฿ → 51 คูปอง</p>
-      <p>• 90฿ → 96 คูปอง</p>
-      <p>• 150฿ → 160 คูปอง</p>
-      <p>• 300฿ → 325 คูปอง</p>
-      <p>• 1,000฿ → ~1,200 คูปอง</p>
-      <hr/>
-      <p><strong>Minecraft</strong></p>
-      <p>• Java / Bedrock ~580฿</p>
-      <p>• Minecoins 1,720: ~296฿</p>
-      <p>• Minecoins 3,500: ~587฿</p>
-      <hr/>
-      <p><strong>Roblox</strong></p>
-      <p>• 400 Robux: ~179฿</p>
-      <p>• 800 Robux: ~359฿</p>
-      <p>• 1,700 Robux: ~719฿</p>
-      <p>• Premium เริ่มที่ ~179฿/เดือน</p>
-      <hr/>
-      <p><strong>TrueMoney Wallet</strong></p>
-      <p>• เติมตามยอดจริง 50฿, 100฿, 500฿</p>
-      <p>• ค่าธรรมเนียมตามช่องทาง</p>
+    <div class="section">
+      <h3 style="color:#fff; text-shadow:0 0 8px red; margin-bottom: 20px;">รายการสินค้า</h3>
+
+      <div class="product-box">
+        <strong>RoV (Garena คูปอง)</strong>
+        <p>• 50฿ → 51 คูปอง</p>
+        <p>• 90฿ → 96 คูปอง</p>
+        <p>• 150฿ → 160 คูปอง</p>
+        <p>• 300฿ → 325 คูปอง</p>
+        <p>• 1,000฿ → ~1,200 คูปอง</p>
+      </div>
+
+      <div class="product-box">
+        <strong>Minecraft</strong>
+        <p>• Java / Bedrock ~580฿</p>
+        <p>• Minecoins 1,720: ~296฿</p>
+        <p>• Minecoins 3,500: ~587฿</p>
+      </div>
+
+      <div class="product-box">
+        <strong>Roblox</strong>
+        <p>• 400 Robux: ~179฿</p>
+        <p>• 800 Robux: ~359฿</p>
+        <p>• 1,700 Robux: ~719฿</p>
+        <p>• Premium เริ่มที่ ~179฿/เดือน</p>
+      </div>
+
+      <div class="product-box">
+        <strong>TrueMoney Wallet</strong>
+        <p>• เติมตามยอดจริง 50฿, 100฿, 500฿</p>
+        <p>• ค่าธรรมเนียมตามช่องทาง</p>
+      </div>
     </div>
-  </div>
 
-  <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="40" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
-  <button id="openChatBtn" style="position:fixed;bottom:20px;right:20px;z-index:999;padding:10px 20px;background:red;color:white;border:none;border-radius:10px;box-shadow:0 0 10px red;">เปิดแชท</button>
-
-<div id="chatPopup" style="display:none;position:fixed;bottom:80px;right:20px;width:300px;background:#1c1c1c;border:2px solid red;border-radius:10px;z-index:1000;box-shadow:0 0 15px red;">
-  <div style="padding:10px;color:white;border-bottom:1px solid red;display:flex;justify-content:space-between;align-items:center;">
-    <span>แชทสด</span>
-    <button onclick="closeChat()" style="background:none;border:none;color:white;font-size:16px;">✖</button>
+    <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
   </div>
-  <div id="chatRoleSelect" style="padding:10px;text-align:center;">
-    <p>เลือกบทบาท</p>
-    <button onclick="selectRole('customer')" style="margin:5px;">ลูกค้า</button>
-    <button onclick="showAdminLogin()" style="margin:5px;">แอดมิน</button>
-  </div>
-  <div id="adminLogin" style="display:none;padding:10px;">
-    <input id="adminUser" placeholder="Username" style="width:90%;margin-bottom:5px;"><br>
-    <input id="adminPass" type="password" placeholder="Password" style="width:90%;margin-bottom:10px;"><br>
-    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
-  </div>
-  <div id="chatBox" style="display:none;height:300px;overflow-y:auto;padding:10px;color:white;font-size:14px;"></div>
-  <div id="chatInputArea" style="display:none;padding:10px;border-top:1px solid red;">
-    <input id="chatInput" placeholder="พิมพ์ข้อความ..." style="width:80%;">
-    <button onclick="sendMessage()">ส่ง</button>
-  </div>
-</div>
 </body>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCL1-u8VFbvW9763J53toozhSuP-xv4C-0",
-    authDomain: "redzone-topup.firebaseapp.com",
-    projectId: "redzone-topup",
-    storageBucket: "redzone-topup.appspot.com",
-    messagingSenderId: "25853216897",
-    appId: "1:25853216897:web:5712eb71623b19e588a580"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  let currentRole = '';
-  let chatUserId = 'user_' + Date.now();
-
-  document.getElementById('openChatBtn').onclick = () => {
-    document.getElementById('chatPopup').style.display = 'block';
-  };
-
-  function closeChat() {
-    document.getElementById('chatPopup').style.display = 'none';
-    document.getElementById('chatBox').innerHTML = '';
-  }
-
-  function selectRole(role) {
-    currentRole = role;
-    document.getElementById('chatRoleSelect').style.display = 'none';
-    document.getElementById('chatBox').style.display = 'block';
-    document.getElementById('chatInputArea').style.display = 'block';
-    listenForMessages();
-  }
-
-  function showAdminLogin() {
-    document.getElementById('chatRoleSelect').style.display = 'none';
-    document.getElementById('adminLogin').style.display = 'block';
-  }
-
-  function loginAdmin() {
-    const user = document.getElementById('adminUser').value;
-    const pass = document.getElementById('adminPass').value;
-    if (user === 'admin' && pass === 'admin') {
-      currentRole = 'admin';
-      document.getElementById('adminLogin').style.display = 'none';
-      document.getElementById('chatBox').style.display = 'block';
-      document.getElementById('chatInputArea').style.display = 'block';
-      listenForMessages();
-    } else {
-      alert('เข้าสู่ระบบไม่สำเร็จ');
-    }
-  }
-
-  function sendMessage() {
-    const msg = document.getElementById('chatInput').value;
-    if (msg.trim() === '') return;
-    db.collection("chat").add({
-      sender: currentRole === 'admin' ? 'admin' : chatUserId,
-      text: msg,
-      role: currentRole,
-      timestamp: Date.now()
-    });
-    document.getElementById('chatInput').value = '';
-  }
-
-  function listenForMessages() {
-    db.collection("chat").orderBy("timestamp").onSnapshot(snapshot => {
-      const chatBox = document.getElementById('chatBox');
-      chatBox.innerHTML = '';
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const isAdmin = data.role === 'admin';
-        const msgClass = isAdmin ? 'color:red;' : 'color:white;';
-        const label = isAdmin ? 'แอดมิน' : 'ลูกค้า';
-        chatBox.innerHTML += `<div style="${msgClass}"><strong>${label}:</strong> ${data.text}</div>`;
-      });
-      chatBox.scrollTop = chatBox.scrollHeight;
-    });
-  }
-</script>
 </html>
