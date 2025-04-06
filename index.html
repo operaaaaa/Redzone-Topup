@@ -243,22 +243,10 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   background: none;
   border: none;
 }
-  .fit-image {
-    width: 100%;   /* ทำให้กว้างสุดตามพื้นที่ที่กำหนด */
-    max-width: 100%; /* จำกัดขนาดไม่ให้เกินขนาดของ container */
-    height: auto;   /* ปรับความสูงอัตโนมัติเพื่อรักษาสัดส่วน */
-  }
   </style>
 </head>
 <body>
   <!-- Advertisement Popup -->
-<div id="adPopup" class="ad-popup">
-  <div class="ad-popup-content">
-    <span class="close-btn" onclick="closeAdPopup()">×</span>
-    <img src="att.npWMIELyXVouaitsU3dr6zm-MIO0bVGPsciwx-LOtQE.jpeg" alt="Image description" class="fit-image">
-      <button onclick="closeAdPopup()">ปิดหน้าต่างนี้</button>
-      </div>
-</div>
   <div class="container">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <div class="title">RedZone Topup</div>
@@ -424,16 +412,7 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     document.getElementById('orderSuccess').style.display = 'block';
   });
 // Function to show the ad popup when the page loads
-window.onload = function() {
-  setTimeout(() => {
-    document.getElementById("adPopup").style.display = "flex";
-  }, 1000); // Show popup after 1 second
-};
 
-// Function to close the ad popup when the user clicks the close button
-function closeAdPopup() {
-  document.getElementById("adPopup").style.display = "none";
-};
 </script>
 </body>
 </html> 
