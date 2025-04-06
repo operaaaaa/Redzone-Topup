@@ -284,12 +284,9 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     <button type="submit" style="padding: 10px 20px; background: red; color: white; border: none; font-family: 'Orbitron'; box-shadow: 0 0 10px red;">ยืนยันสั่งซื้อ</button>
   </form>
 </div>
+
 </div>
   <div class="receipt-section">
-  <h4>ออกใบเสร็จเพื่อแลกรับสิทธิพิเศษ</h4>
-  <input type="text" id="receiptRef" placeholder="กรอกเลขอ้างอิงสลิป" />
-  <button onclick="generateReceipt()">ออกใบเสร็จ PDF</button>
-  </div>
     <div id="orderSuccess" style="display:none; margin-top:15px; color:lightgreen;">ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง</div>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
@@ -376,41 +373,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   });
 </script>
 
-<!-- jsPDF CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script>
-  async function generateReceipt() {
-    const { jsPDF } = window.jspdf;
-
-    const ref = document.getElementById("receiptRef").value.trim();
-    const name = document.getElementById("fullName").value || "ไม่ระบุ";
-    const product = document.getElementById("productItem").value || "ไม่ระบุ";
-    const price = document.getElementById("productItem").selectedOptions[0].getAttribute("data-price") || "0";
-    const now = new Date().toLocaleString("th-TH");
-    
-    if (!ref) {
-      alert("กรุณากรอกเลขอ้างอิงสลิป");
-      return;
-    }
-
-    const pdf = new jsPDF();
-
-    pdf.setFont("courier", "bold");
-    pdf.setFontSize(16);
-    pdf.setTextColor(220, 50, 50);
-    pdf.text("RedZone Topup - ใบเสร็จรับเงิน", 20, 20);
-
-    pdf.setFontSize(12);
-    pdf.setTextColor(0);
-    pdf.text(`ชื่อผู้ซื้อ: ${name}`, 20, 40);
-    pdf.text(`สินค้า: ${product}`, 20, 50);
-    pdf.text(`ราคารวม: ${price} บาท`, 20, 60);
-    pdf.text(`วันที่: ${now}`, 20, 70);
-    pdf.text(`เลขอ้างอิงสลิป: ${ref}`, 20, 80);
-
-    pdf.save(`RedZone_Receipt_${ref}.pdf`);
-  }
-</script>
 </body>
 </html>
