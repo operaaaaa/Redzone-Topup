@@ -250,59 +250,17 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   let selectedRating = 0;
-  let submitting = false;
 
   function updateStarDisplay(rating) {
     document.querySelectorAll('.stars').forEach(star => {
       const value = parseInt(star.dataset.rating);
-      if (value <= rating) {
-        star.classList.add('active');
-      } else {
-        star.classList.remove('active');
-      }
+      star.classList.toggle('active', value <= rating);
     });
   }
 
-  async function submitReview() {
-    if (submitting) return;
-    submitting = true;
-
-    if (selectedRating === 0) {
-      alert("กรุณาเลือกดาวก่อนรีวิว");
-      submitting = false;
-      return;
-    }
-
-    const comment = document.getElementById('comment').value.trim();
-    if (!comment) {
-      alert("กรุณากรอกความคิดเห็นก่อนส่งรีวิว");
-      submitting = false;
-      return;
-    }
-
-    try {
-      await db.collection("reviews").add({
-        rating: selectedRating,
-        comment: comment,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-      document.getElementById('ding-sound').play();
-      selectedRating = 0;
-      updateStarDisplay(0);
-      document.getElementById('comment').value = '';
-      alert("ขอบคุณสำหรับรีวิวของคุณ!");
-      loadReviews();
-    } catch (err) {
-      alert("เกิดข้อผิดพลาดในการส่งรีวิว");
-    }
-
-    submitting = false;
-  }
-
   function toggleReview(id) {
-    const el = document.getElementById(id);
-    el?.classList.toggle("collapsed");
+    const element = document.getElementById(id);
+    if (element) element.classList.toggle('collapsed');
   }
 
   function loadReviews() {
@@ -329,7 +287,6 @@
             </div>
           </div>
         `;
-
         total += data.rating;
         count++;
       });
@@ -338,10 +295,38 @@
       document.getElementById("review-count").innerText = count;
       document.getElementById("average").innerText = count ? (total / count).toFixed(2) : "-";
       spinner.style.display = "none";
-    }).catch(() => {
-      spinner.style.display = "none";
-      alert("เกิดข้อผิดพลาดในการโหลดรีวิว");
     });
+  }
+
+  async function submitReview() {
+    if (selectedRating === 0) {
+      alert("กรุณาเลือกดาวก่อนรีวิว");
+      return;
+    }
+
+    const comment = document.getElementById('comment').value.trim();
+    if (!comment) {
+      alert("กรุณากรอกความคิดเห็นก่อนส่งรีวิว");
+      return;
+    }
+
+    try {
+      await db.collection("reviews").add({
+        rating: selectedRating,
+        comment: comment,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      document.getElementById('ding-sound').play();
+      selectedRating = 0;
+      updateStarDisplay(0);
+      document.getElementById('comment').value = '';
+      loadReviews();
+      alert("ขอบคุณสำหรับรีวิวของคุณ!");
+    } catch (error) {
+      alert("เกิดข้อผิดพลาดในการส่งรีวิว");
+      console.error(error);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
