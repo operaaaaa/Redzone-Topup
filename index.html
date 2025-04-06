@@ -358,12 +358,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       box.classList.toggle('active');
     });
   });
-  // ระบบคลิกเปิด–ปิด (ของเดิม)
-  document.querySelectorAll('.product-box').forEach(box => {
-    box.querySelector('.product-header').addEventListener('click', () => {
-      box.classList.toggle('active');
-    });
-  });
 
   // ระบบเลื่อนแล้วเปิดอัตโนมัติ
   const observer = new IntersectionObserver(entries => {
