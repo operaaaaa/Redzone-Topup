@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบโชว์ประวัติการซื้อขาย</title>
+    <title>ระบบรีวิวและการสั่งซื้อ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
             background-color: #f4f4f4;
             padding: 20px;
         }
@@ -19,48 +20,36 @@
             margin-bottom: 20px;
             cursor: pointer;
         }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        .product {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 250px;
-            padding: 10px;
-            text-align: center;
-        }
-        .product h3 {
+        h2 {
             color: #333;
         }
-        .product button {
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
             background-color: #ff5722;
             color: white;
             border: none;
-            padding: 10px;
             border-radius: 5px;
             cursor: pointer;
         }
-        .product button:hover {
+        button:hover {
             background-color: #e64a19;
         }
-        .reviews {
-            display: none;
-            margin-top: 10px;
-            text-align: left;
-            padding: 10px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-        }
-        .reviews p {
-            font-size: 14px;
-            margin: 5px 0;
-        }
         .stars {
-            font-size: 20px;
+            display: inline-block;
+        }
+        .stars span {
+            font-size: 30px;
+            cursor: pointer;
+            color: #ccc;
+        }
+        .stars span.selected {
             color: gold;
         }
         .status {
@@ -68,78 +57,60 @@
             font-size: 16px;
             margin-top: 10px;
         }
+        .order-history {
+            margin-top: 20px;
+        }
+        #customerCount {
+            font-size: 18px;
+            margin-top: 20px;
+        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
 </head>
 <body>
 
     <header>
-        <h2>ระบบโชว์ประวัติการซื้อขาย</h2>
+        <a href="https://www.instagram.com/redzone_topup?igsh=MXY1Z3FidjFnbmVlOA%3D%3D&utm_source=qr" target="_blank">
+            <img src="logo.png" alt="โลโก้ร้าน" class="logo">
+        </a>
+        <h2>ระบบรีวิวและการสั่งซื้อ</h2>
     </header>
 
-    <div class="product-list">
-        <!-- RoV -->
-        <div class="product" id="rov">
-            <h3>RoV (Garena คูปอง)</h3>
-            <ul>
-                <li>50฿ → 51 คูปอง</li>
-                <li>90฿ → 96 คูปอง</li>
-                <li>150฿ → 160 คูปอง</li>
-                <li>300฿ → 325 คูปอง</li>
-                <li>1,000฿ → ~1,200 คูปอง (มีโบนัส)</li>
-            </ul>
-            <button onclick="toggleReviews('rov')">ดูรีวิว</button>
-            <div id="reviews-rov" class="reviews">
-                <div class="stars">★★★★★</div>
-                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
-            </div>
-        </div>
+    <!-- ส่วน Login สำหรับแอดมิน -->
+    <div id="loginPage">
+        <h3>Login Admin</h3>
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">เข้าสู่ระบบ</button>
+        <div id="loginStatus"></div>
+    </div>
 
-        <!-- Minecraft -->
-        <div class="product" id="minecraft">
-            <h3>Minecraft</h3>
-            <ul>
-                <li>Java หรือ Bedrock Edition: ~580฿</li>
-                <li>Minecoins 1,720: ~296฿</li>
-                <li>Minecoins 3,500: ~587฿</li>
-            </ul>
-            <button onclick="toggleReviews('minecraft')">ดูรีวิว</button>
-            <div id="reviews-minecraft" class="reviews">
-                <div class="stars">★★★★★</div>
-                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
-            </div>
+    <!-- หน้า รีวิวสำหรับลูกค้า -->
+    <div id="reviewPage" style="display:none;">
+        <h3>กรุณากรอกรหัสอ้างอิงและให้คะแนน</h3>
+        <label for="refCodeInput">รหัสอ้างอิง:</label>
+        <input type="text" id="refCodeInput" placeholder="กรอกรหัสอ้างอิง">
+        
+        <div class="stars" id="stars">
+            <span data-value="1">☆</span>
+            <span data-value="2">☆</span>
+            <span data-value="3">☆</span>
+            <span data-value="4">☆</span>
+            <span data-value="5">☆</span>
         </div>
+        
+        <button onclick="submitReview()">ส่งรีวิว</button>
+        <div id="reviewStatus"></div>
 
-        <!-- Roblox -->
-        <div class="product" id="roblox">
-            <h3>Roblox</h3>
-            <ul>
-                <li>400 Robux: ~179฿</li>
-                <li>800 Robux: ~359฿</li>
-                <li>1,700 Robux: ~719฿</li>
-                <li>Roblox Premium เริ่มต้นที่ ~179฿/เดือน</li>
-            </ul>
-            <button onclick="toggleReviews('roblox')">ดูรีวิว</button>
-            <div id="reviews-roblox" class="reviews">
-                <div class="stars">★★★★★</div>
-                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
-            </div>
-        </div>
+        <!-- ประวัติการสั่งซื้อ -->
+        <div id="orderHistory" class="order-history"></div>
 
-        <!-- TrueMoney Wallet -->
-        <div class="product" id="truemoney">
-            <h3>TrueMoney Wallet</h3>
-            <ul>
-                <li>50฿, 100฿, 300฿, 500฿</li>
-                <li>มีค่าธรรมเนียมกรณีบางช่องทาง</li>
-            </ul>
-            <button onclick="toggleReviews('truemoney')">ดูรีวิว</button>
-            <div id="reviews-truemoney" class="reviews">
-                <div class="stars">★★★★★</div>
-                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
-            </div>
-        </div>
+        <!-- แสดงจำนวนลูกค้าจริงที่รีวิว -->
+        <div id="customerCount"></div>
     </div>
 
     <script>
@@ -156,47 +127,83 @@
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore(app);
 
-        // ฟังก์ชัน toggle รีวิว
-        function toggleReviews(product) {
-            const reviewsDiv = document.getElementById(`reviews-${product}`);
-            reviewsDiv.style.display = reviewsDiv.style.display === "block" ? "none" : "block";
-            // ดึงข้อมูลรีวิวจาก Firebase
-            fetchReviews(product);
+        // ฟังก์ชัน Login
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "admin" && password === "admin") {
+                document.getElementById("loginPage").style.display = "none";
+                document.getElementById("reviewPage").style.display = "block";
+                fetchCustomerCount(); // ดึงจำนวนลูกค้าจริงที่รีวิว
+            } else {
+                document.getElementById("loginStatus").innerText = "ข้อมูลไม่ถูกต้อง";
+            }
         }
 
-        // ฟังก์ชันดึงรีวิวจาก Firebase
-        function fetchReviews(product) {
-            db.collection("reviews").where("product", "==", product).get()
-            .then((querySnapshot) => {
-                let reviewText = "";
-                querySnapshot.forEach((doc) => {
-                    reviewText += `ลูกค้า: ${doc.data().refCode}, คะแนน: ${"★".repeat(doc.data().rating)}\n`;
+        // ฟังก์ชันส่งรีวิว
+        function submitReview() {
+            const refCode = document.getElementById("refCodeInput").value;
+            const rating = document.querySelector('.stars .selected') ? document.querySelector('.stars .selected').getAttribute('data-value') : null;
+
+            if (refCode && rating) {
+                db.collection("reviews").add({
+                    refCode: refCode,
+                    rating: rating,
+                    createdAt: new Date(),
+                    isFake: false // ให้ค่าคือ false สำหรับลูกค้าจริง
+                }).then(() => {
+                    document.getElementById("reviewStatus").innerText = "รีวิวของคุณถูกส่งแล้ว!";
+                    fetchCustomerCount(); // รีเฟรชจำนวนลูกค้าจริงที่รีวิว
+                }).catch((error) => {
+                    console.error("Error adding review: ", error);
+                    document.getElementById("reviewStatus").innerText = "เกิดข้อผิดพลาดในการส่งรีวิว";
                 });
-                const reviewsDiv = document.getElementById(`reviews-${product}`);
-                reviewsDiv.innerHTML = `<div class="stars">★★★★★</div>
-                                        <p>ลูกค้าที่ยืนยันการสั่งซื้อ ${querySnapshot.size} คน</p>
-                                        <pre>${reviewText}</pre>`;
+            } else {
+                document.getElementById("reviewStatus").innerText = "กรุณากรอกรหัสอ้างอิงและให้คะแนน";
+            }
+        }
+
+        // ฟังก์ชันให้ดาว
+        document.querySelectorAll('.stars span').forEach(function(star) {
+            star.addEventListener('click', function() {
+                document.querySelectorAll('.stars span').forEach(function(star) {
+                    star.classList.remove('selected');
+                });
+                star.classList.add('selected');
+            });
+        });
+
+        // ฟังก์ชันนับจำนวนลูกค้าจริงที่รีวิว
+        function fetchCustomerCount() {
+            db.collection("reviews").where("isFake", "==", false).get()
+            .then((querySnapshot) => {
+                const customerCount = querySnapshot.size;
+                document.getElementById("customerCount").innerText = `จำนวนลูกค้าจริงที่รีวิว: ${customerCount} คน`;
             })
             .catch((error) => {
                 console.error("Error fetching reviews: ", error);
+                document.getElementById("customerCount").innerText = "ไม่สามารถดึงข้อมูลลูกค้าจริงได้";
             });
         }
 
-        // ฟังก์ชันสร้างรีวิวลูกค้าปลอม
+        // ฟังก์ชันสร้างลูกค้าปลอมๆ
         function generateFakeCustomers() {
             const fakeCustomers = [];
             const numCustomers = 2793; // จำนวนลูกค้า
-            const ratingRange = [4, 5]; // ให้รีวิวเฉลี่ย 4-5 ดาว
+            const ratingRange = [3, 5]; // ช่วงคะแนนดาวเฉลี่ยระหว่าง 3-5 ดาว
 
             for (let i = 0; i < numCustomers; i++) {
                 const customer = {
-                    refCode: `REF-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-                    product: ["rov", "minecraft", "roblox", "truemoney"][Math.floor(Math.random() * 4)],
-                    rating: Math.floor(Math.random() * (ratingRange[1] - ratingRange[0] + 1)) + ratingRange[0],
+                    name: `Customer ${i + 1}`,
+                    refCode: generateRandomCode(),
+                    rating: getRandomRating(ratingRange[0], ratingRange[1]),
+                    orderHistory: generateOrderHistory(),
                     createdAt: new Date(),
-                    isFake: true // กำหนดเป็นลูกค้าปลอม
+                    isFake: true // ให้ค่าคือ true สำหรับลูกค้าปลอม
                 };
                 fakeCustomers.push(customer);
             }
@@ -204,14 +211,42 @@
             fakeCustomers.forEach(customer => {
                 db.collection("reviews").add(customer)
                 .then(() => {
-                    console.log(`ลูกค้าปลอม ${customer.refCode} ถูกเพิ่มสำเร็จ`);
+                    console.log(`ลูกค้า ${customer.name} ถูกเพิ่มสำเร็จ`);
                 }).catch((error) => {
                     console.error("Error adding customer: ", error);
                 });
             });
         }
 
-        // เรียกใช้การสร้างลูกค้าปลอมๆ
+        // ฟังก์ชันสร้างรหัสอ้างอิงสุ่ม
+        function generateRandomCode() {
+            return "REF-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        }
+
+        // ฟังก์ชันสุ่มคะแนนดาว
+        function getRandomRating(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // ฟังก์ชันสร้างประวัติการสั่งซื้อปลอมๆ
+        function generateOrderHistory() {
+            const orders = [
+                { product: "RoV (Garena คูปอง)", amount: "50฿", quantity: 1 },
+                { product: "Minecraft (Java Edition)", amount: "580฿", quantity: 1 },
+                { product: "Roblox Premium", amount: "179฿", quantity: 1 },
+                { product: "TrueMoney Wallet", amount: "100฿", quantity: 1 }
+            ];
+
+            const randomOrder = orders[Math.floor(Math.random() * orders.length)];
+            return {
+                product: randomOrder.product,
+                amount: randomOrder.amount,
+                quantity: randomOrder.quantity,
+                orderDate: new Date()
+            };
+        }
+
+        // เรียกใช้ฟังก์ชันเพื่อสร้างข้อมูลลูกค้าปลอมๆ
         generateFakeCustomers();
     </script>
 </body>
