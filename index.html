@@ -361,13 +361,19 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
 
   // ระบบเลื่อนแล้วเปิดอัตโนมัติ
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
         entry.target.classList.add('active');
-        observer.unobserve(entry.target); // เปิดแค่ครั้งเดียว
-      }
-    });
-  }, { threshold: 1.0 });
+      }, 300); // หน่วงเวลา 300ms ก่อนเปิด
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.85 }); // เห็นเกือบเต็มกล่องก่อนเปิด
+
+document.querySelectorAll('.product-box').forEach(box => {
+  observer.observe(box);
+});
 
   document.querySelectorAll('.product-box').forEach(box => {
     observer.observe(box);
