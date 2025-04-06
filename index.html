@@ -6,45 +6,7 @@
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-  
-  body {
-  position: relative;
-  z-index: 1;
-}
-
-/* ชั้นเอฟเฟกต์ไฟเรือง */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: -1;
-  background: radial-gradient(circle at center, rgba(255, 50, 50, 0.25), transparent 70%);
-  animation: fireGlow 3s ease-in-out infinite;
-  box-shadow:
-    0 0 30px rgba(255, 50, 50, 0.4),
-    0 0 60px rgba(255, 50, 50, 0.3),
-    0 0 90px rgba(255, 0, 0, 0.25);
-}
-
-@keyframes fireGlow {
-  0%, 100% {
-    filter: blur(6px) brightness(1.5);
-    opacity: 0.7;
-  }
-  50% {
-    filter: blur(8px) brightness(2);
-    opacity: 1;
-  }
-}
-  
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Orbitron', sans-serif;
@@ -53,11 +15,33 @@ body::before {
       text-align: center;
       animation: pulseGlow 10s infinite;
       min-height: 100vh;
+      position: relative;
     }
 
     @keyframes pulseGlow {
       0%, 100% { box-shadow: 0 0 20px red; }
       50% { box-shadow: 0 0 40px #ff4c4c; }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      background: radial-gradient(circle at center, rgba(255, 50, 50, 0.25), transparent 70%);
+      animation: fireGlow 3s ease-in-out infinite;
+      box-shadow:
+        0 0 30px rgba(255, 50, 50, 0.4),
+        0 0 60px rgba(255, 50, 50, 0.3),
+        0 0 90px rgba(255, 0, 0, 0.25);
+    }
+
+    @keyframes fireGlow {
+      0%, 100% { filter: blur(6px) brightness(1.5); opacity: 0.7; }
+      50% { filter: blur(8px) brightness(2); opacity: 1; }
     }
 
     .container {
@@ -108,26 +92,61 @@ body::before {
       box-shadow: 0 0 25px #ff000088;
     }
 
-    .product-box {
-      border: 1px solid #ff4c4c;
-      border-radius: 12px;
-      margin: 15px 0;
-      padding: 15px;
-      background-color: #111;
-      box-shadow: 0 0 12px #ff4c4c44;
-      text-align: left;
+    .section h3 {
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 0 0 10px red, 0 0 20px white;
+      margin-bottom: 25px;
     }
 
-    .product-box strong {
+    .product-box {
+      background: #111;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 25px #ff4c4c33, 0 0 10px #ff4c4c55;
+      overflow: hidden;
+      transition: 0.3s ease;
+    }
+
+    .product-header {
+      padding: 15px;
+      background: #1c1c1c;
       color: #ff4c4c;
-      font-size: 1.2rem;
-      display: block;
-      margin-bottom: 10px;
+      font-size: 1.1rem;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
       text-shadow: 0 0 6px white;
     }
 
-    .product-box p {
-      margin: 4px 0;
+    .product-header::after {
+      content: '+';
+      position: absolute;
+      right: 15px;
+      font-size: 1.3rem;
+      transition: transform 0.2s ease;
+    }
+
+    .product-box.active .product-header::after {
+      transform: rotate(45deg);
+    }
+
+    .product-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: #181818;
+      padding: 0 15px;
+      text-align: left;
+    }
+
+    .product-box.active .product-details {
+      padding: 10px 15px 15px;
+      max-height: 500px;
+    }
+
+    .product-details p {
+      margin: 6px 0;
       font-size: 0.95rem;
       color: #ccc;
     }
@@ -140,21 +159,10 @@ body::before {
     }
 
     @media (max-width: 480px) {
-      .title {
-        font-size: 1.7rem;
-      }
-
-      .status {
-        font-size: 0.8rem;
-      }
-
-      .section {
-        padding: 15px;
-      }
-
-      .product-box p {
-        font-size: 0.85rem;
-      }
+      .title { font-size: 1.7rem; }
+      .status { font-size: 0.8rem; }
+      .section { padding: 15px; }
+      .product-details p { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -164,42 +172,57 @@ body::before {
     <div class="title">RedZone Topup</div>
     <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
-    <h4>@redzone_topup<h4>
+    <h4>@redzone_topup</h4>
+
     <div class="section">
-      <h3 style="color:#fff; text-shadow:0 0 8px red; margin-bottom: 20px;">รายการสินค้า</h3>
+      <h3>รายการสินค้า</h3>
 
       <div class="product-box">
-        <strong>RoV (Garena คูปอง)</strong>
-        <p>• 50฿ → 51 คูปอง</p>
-        <p>• 90฿ → 96 คูปอง</p>
-        <p>• 150฿ → 160 คูปอง</p>
-        <p>• 300฿ → 325 คูปอง</p>
-        <p>• 1,000฿ → ~1,200 คูปอง</p>
+        <div class="product-header">RoV (Garena คูปอง)</div>
+        <div class="product-details">
+          <p>• 50฿ → 51 คูปอง</p>
+          <p>• 90฿ → 96 คูปอง</p>
+          <p>• 150฿ → 160 คูปอง</p>
+          <p>• 300฿ → 325 คูปอง</p>
+          <p>• 1,000฿ → ~1,200 คูปอง</p>
+        </div>
       </div>
 
       <div class="product-box">
-        <strong>Minecraft</strong>
-        <p>• Java / Bedrock ~580฿</p>
-        <p>• Minecoins 1,720: ~296฿</p>
-        <p>• Minecoins 3,500: ~587฿</p>
+        <div class="product-header">Minecraft</div>
+        <div class="product-details">
+          <p>• Java / Bedrock ~580฿</p>
+          <p>• Minecoins 1,720: ~296฿</p>
+          <p>• Minecoins 3,500: ~587฿</p>
+        </div>
       </div>
 
       <div class="product-box">
-        <strong>Roblox</strong>
-        <p>• 400 Robux: ~179฿</p>
-        <p>• 800 Robux: ~359฿</p>
-        <p>• 1,700 Robux: ~719฿</p>
-        <p>• Premium เริ่มที่ ~179฿/เดือน</p>
+        <div class="product-header">Roblox</div>
+        <div class="product-details">
+          <p>• 400 Robux: ~179฿</p>
+          <p>• 800 Robux: ~359฿</p>
+          <p>• 1,700 Robux: ~719฿</p>
+          <p>• Premium เริ่มที่ ~179฿/เดือน</p>
+        </div>
       </div>
 
       <div class="product-box">
-        <strong>TrueMoney Wallet</strong>
-        <p>• เติมตามยอดจริง 50฿, 100฿, 500฿</p>
-        <p>• ค่าธรรมเนียมตามช่องทาง</p>
+        <div class="product-header">TrueMoney Wallet</div>
+        <div class="product-details">
+          <p>• เติมตามยอดจริง 50฿, 100฿, 500฿</p>
+          <p>• ค่าธรรมเนียมตามช่องทาง</p>
+        </div>
       </div>
     </div>
-
-
   </div>
+
+  <script>
+    document.querySelectorAll('.product-box').forEach(box => {
+      box.querySelector('.product-header').addEventListener('click', () => {
+        box.classList.toggle('active');
+      });
+    });
+  </script>
 </body>
 </html>
