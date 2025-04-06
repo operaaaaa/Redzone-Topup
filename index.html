@@ -367,7 +367,7 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
         observer.unobserve(entry.target); // เปิดแค่ครั้งเดียว
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 1.0 });
 
   document.querySelectorAll('.product-box').forEach(box => {
     observer.observe(box);
