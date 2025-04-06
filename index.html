@@ -1,176 +1,218 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RedZone Topup - เข้าสู่ระบบ</title>
-  <style>
-    body {
-      background-color: #f0f2f5;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .login-container {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      position: relative;
-    }
-    .login-container h1 {
-      color: #1877f2;
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    .login-container input {
-      width: 100%;
-      padding: 0.9rem;
-      margin: 0.5rem 0;
-      border: 1px solid #dddfe2;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    .login-container button {
-      width: 100%;
-      padding: 0.9rem;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .login-btn {
-      background-color: #1877f2;
-      color: #fff;
-    }
-    .create-account {
-      background-color: #42b72a;
-      color: #fff;
-      margin-top: 1rem;
-    }
-    a {
-      display: block;
-      margin-top: 1rem;
-      color: #1877f2;
-      font-size: 0.95rem;
-      text-decoration: none;
-    }
-    .divider {
-      margin: 1rem 0;
-      border-top: 1px solid #dddfe2;
-    }
-    #login-message {
-      color: #f02849;
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-      display: none;
-    }
-    #success-popup {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff;
-      padding: 2rem;
-      width: 100%;
-      max-width: 380px;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-      display: none;
-      z-index: 999;
-      animation: fadeInUp 0.4s ease;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
-    }
-    #success-popup h2 {
-      color: #e91e63;
-      margin-bottom: 0.5rem;
-    }
-    #success-popup p {
-      font-size: 0.95rem;
-      color: #333;
-      margin-bottom: 1.2rem;
-    }
-    #ig-link {
-      display: inline-block;
-      background: linear-gradient(45deg, #ff416c, #ff4b2b);
-      color: white;
-      padding: 0.7rem 1.2rem;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    #ig-link:hover {
-      background: linear-gradient(45deg, #ff4b2b, #ff416c);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบโชว์ประวัติการซื้อขาย</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .product {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 250px;
+            padding: 10px;
+            text-align: center;
+        }
+        .product h3 {
+            color: #333;
+        }
+        .product button {
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .product button:hover {
+            background-color: #e64a19;
+        }
+        .reviews {
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+        .reviews p {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .stars {
+            font-size: 20px;
+            color: gold;
+        }
+        .status {
+            color: #333;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div class="login-container">
-    <h1>Facebook</h1>
-    <p id="login-message">กรุณาเข้าสู่ระบบก่อน</p>
-    <input type="text" id="email" placeholder="อีเมลหรือเบอร์โทรศัพท์" />
-    <input type="password" id="password" placeholder="รหัสผ่าน" />
-    <button class="login-btn" id="login-btn">เข้าสู่ระบบ</button>
-    <a href="#">ลืมรหัสผ่านใช่ไหม?</a>
-    <div class="divider"></div>
-    <button class="create-account">สร้างบัญชีใหม่</button>
-  </div>
 
-  <div id="success-popup">
-    <h2>RedZone Topup</h2>
-    <p>ร้าน RedZone Topup จะเปิดให้บริการ<br><strong>วันที่ 1 พฤษภาคม พ.ศ. 2568 เวลา 16:00 น.</strong></p>
-    <a id="ig-link" href="https://www.instagram.com/redzone_topup?igsh=MXZtdG1zemZ3Zmh0cg==" target="_blank">ติดต่อผ่าน IG</a>
-  </div>
+    <header>
+        <h2>ระบบโชว์ประวัติการซื้อขาย</h2>
+    </header>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCL1-u8VFbvW9763J53toozhSuP-xv4C-0",
-      authDomain: "redzone-topup.firebaseapp.com",
-      projectId: "redzone-topup",
-      storageBucket: "redzone-topup.firebasestorage.app",
-      messagingSenderId: "25853216897",
-      appId: "1:25853216897:web:5712eb71623b19e588a580",
-      measurementId: "G-3G126L0PF3"
-    };
-    firebase.initializeApp(firebaseConfig);
+    <div class="product-list">
+        <!-- RoV -->
+        <div class="product" id="rov">
+            <h3>RoV (Garena คูปอง)</h3>
+            <ul>
+                <li>50฿ → 51 คูปอง</li>
+                <li>90฿ → 96 คูปอง</li>
+                <li>150฿ → 160 คูปอง</li>
+                <li>300฿ → 325 คูปอง</li>
+                <li>1,000฿ → ~1,200 คูปอง (มีโบนัส)</li>
+            </ul>
+            <button onclick="toggleReviews('rov')">ดูรีวิว</button>
+            <div id="reviews-rov" class="reviews">
+                <div class="stars">★★★★★</div>
+                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
+            </div>
+        </div>
 
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("redirect") === "true") {
-      document.getElementById("login-message").style.display = "block";
-    }
+        <!-- Minecraft -->
+        <div class="product" id="minecraft">
+            <h3>Minecraft</h3>
+            <ul>
+                <li>Java หรือ Bedrock Edition: ~580฿</li>
+                <li>Minecoins 1,720: ~296฿</li>
+                <li>Minecoins 3,500: ~587฿</li>
+            </ul>
+            <button onclick="toggleReviews('minecraft')">ดูรีวิว</button>
+            <div id="reviews-minecraft" class="reviews">
+                <div class="stars">★★★★★</div>
+                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
+            </div>
+        </div>
 
-    document.getElementById("login-btn").addEventListener("click", () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+        <!-- Roblox -->
+        <div class="product" id="roblox">
+            <h3>Roblox</h3>
+            <ul>
+                <li>400 Robux: ~179฿</li>
+                <li>800 Robux: ~359฿</li>
+                <li>1,700 Robux: ~719฿</li>
+                <li>Roblox Premium เริ่มต้นที่ ~179฿/เดือน</li>
+            </ul>
+            <button onclick="toggleReviews('roblox')">ดูรีวิว</button>
+            <div id="reviews-roblox" class="reviews">
+                <div class="stars">★★★★★</div>
+                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
+            </div>
+        </div>
 
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          document.querySelector(".login-container").style.opacity = "0.1";
-          document.getElementById("success-popup").style.display = "block";
-        })
-        .catch((error) => {
-          alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
-        });
-    });
-  </script>
+        <!-- TrueMoney Wallet -->
+        <div class="product" id="truemoney">
+            <h3>TrueMoney Wallet</h3>
+            <ul>
+                <li>50฿, 100฿, 300฿, 500฿</li>
+                <li>มีค่าธรรมเนียมกรณีบางช่องทาง</li>
+            </ul>
+            <button onclick="toggleReviews('truemoney')">ดูรีวิว</button>
+            <div id="reviews-truemoney" class="reviews">
+                <div class="stars">★★★★★</div>
+                <p>ลูกค้าที่ยืนยันการสั่งซื้อ 2,793 คน</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+            authDomain: "redzone-topup-852a2.firebaseapp.com",
+            projectId: "redzone-topup-852a2",
+            storageBucket: "redzone-topup-852a2.firebasestorage.app",
+            messagingSenderId: "209606560486",
+            appId: "1:209606560486:web:d12baa8545d99adad14927",
+            measurementId: "G-T1WWTKDY79"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+
+        // ฟังก์ชัน toggle รีวิว
+        function toggleReviews(product) {
+            const reviewsDiv = document.getElementById(`reviews-${product}`);
+            reviewsDiv.style.display = reviewsDiv.style.display === "block" ? "none" : "block";
+            // ดึงข้อมูลรีวิวจาก Firebase
+            fetchReviews(product);
+        }
+
+        // ฟังก์ชันดึงรีวิวจาก Firebase
+        function fetchReviews(product) {
+            db.collection("reviews").where("product", "==", product).get()
+            .then((querySnapshot) => {
+                let reviewText = "";
+                querySnapshot.forEach((doc) => {
+                    reviewText += `ลูกค้า: ${doc.data().refCode}, คะแนน: ${"★".repeat(doc.data().rating)}\n`;
+                });
+                const reviewsDiv = document.getElementById(`reviews-${product}`);
+                reviewsDiv.innerHTML = `<div class="stars">★★★★★</div>
+                                        <p>ลูกค้าที่ยืนยันการสั่งซื้อ ${querySnapshot.size} คน</p>
+                                        <pre>${reviewText}</pre>`;
+            })
+            .catch((error) => {
+                console.error("Error fetching reviews: ", error);
+            });
+        }
+
+        // ฟังก์ชันสร้างรีวิวลูกค้าปลอม
+        function generateFakeCustomers() {
+            const fakeCustomers = [];
+            const numCustomers = 2793; // จำนวนลูกค้า
+            const ratingRange = [4, 5]; // ให้รีวิวเฉลี่ย 4-5 ดาว
+
+            for (let i = 0; i < numCustomers; i++) {
+                const customer = {
+                    refCode: `REF-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+                    product: ["rov", "minecraft", "roblox", "truemoney"][Math.floor(Math.random() * 4)],
+                    rating: Math.floor(Math.random() * (ratingRange[1] - ratingRange[0] + 1)) + ratingRange[0],
+                    createdAt: new Date(),
+                    isFake: true // กำหนดเป็นลูกค้าปลอม
+                };
+                fakeCustomers.push(customer);
+            }
+
+            fakeCustomers.forEach(customer => {
+                db.collection("reviews").add(customer)
+                .then(() => {
+                    console.log(`ลูกค้าปลอม ${customer.refCode} ถูกเพิ่มสำเร็จ`);
+                }).catch((error) => {
+                    console.error("Error adding customer: ", error);
+                });
+            });
+        }
+
+        // เรียกใช้การสร้างลูกค้าปลอมๆ
+        generateFakeCustomers();
+    </script>
 </body>
 </html>
