@@ -204,9 +204,56 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       .section { padding: 15px; }
       .product-details p { font-size: 0.85rem; }
     }
+    .ad-popup {
+  display: none; /* Initially hide the popup */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.ad-popup-content {
+  background: #222;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.ad-popup h2 {
+  color: #ff4c4c;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
   </style>
 </head>
 <body>
+  <!-- Advertisement Popup -->
+<div id="adPopup" class="ad-popup">
+  <div class="ad-popup-content">
+    <span class="close-btn" onclick="closeAdPopup()">×</span>
+    <h2>โปรโมชั่นพิเศษ!</h2>
+    <p>อย่าพลาดโปรโมชั่นลดราคาสินค้าภายในเว็บไซต์ RedZone Topup!</p>
+  </div>
+</div>
   <div class="container">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <div class="title">RedZone Topup</div>
@@ -371,7 +418,17 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     document.getElementById('orderForm').reset();
     document.getElementById('orderSuccess').style.display = 'block';
   });
+// Function to show the ad popup when the page loads
+window.onload = function() {
+  setTimeout(() => {
+    document.getElementById("adPopup").style.display = "flex";
+  }, 1000); // Show popup after 1 second
+};
 
+// Function to close the ad popup when the user clicks the close button
+function closeAdPopup() {
+  document.getElementById("adPopup").style.display = "none";
+}
 </script>
 </body>
 </html>
