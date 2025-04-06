@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
+  input, select, textarea {
+  background: #111;
+  border: 1px solid #ff4c4c;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  font-size: 1rem;
+  font-family: 'Rajdhani', 'Orbitron', sans-serif;
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
+  transition: 0.2s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px #ff4c4c;
+  border-color: #ff4c4c;
+}
+
+button[type="submit"] {
+  background-color: #ff1a1a;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+  transition: 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: #ff4c4c;
+  box-shadow: 0 0 15px red;
+  cursor: pointer;
+  transform: scale(1.05);
+}
     * { box-sizing: border-box; }
     body {
       margin: 0;
