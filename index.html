@@ -195,7 +195,7 @@
       <span class="stars" data-rating="4">★</span>
       <span class="stars" data-rating="5">★</span>
     </div>
-    <button onclick="submitReview()">ส่งรีวิว</button>
+  <button id="submit-btn">ส่งรีวิว</button>
     <div id="spinner">กำลังโหลดรีวิว...</div>
     <div class="average-rating">คะแนนเฉลี่ย: <span id="average">-</span></div>
     <div class="count">จำนวนผู้รีวิวทั้งหมด: <span id="review-count">0</span></div>
@@ -322,7 +322,7 @@
       spinner.style.display = "none";
     });
   }
-
+document.getElementById("submit-btn").addEventListener("click", submitReview);
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.stars').forEach(star => {
       star.addEventListener('click', () => {
