@@ -159,21 +159,22 @@
         font-size: 24px;
       }
     }
-    .review-comment.collapsed {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
-  padding: 0;
-  margin: 0;
-}
 
-.review-comment {
-  max-height: 100px;
-  opacity: 1;
-  transition: all 0.3s ease;
-  margin-top: 5px;
-}
+    .review-comment.collapsed {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+      padding: 0;
+      margin: 0;
+    }
+
+    .review-comment {
+      max-height: 100px;
+      opacity: 1;
+      transition: all 0.3s ease;
+      margin-top: 5px;
+    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -195,7 +196,8 @@
       <span class="stars" data-rating="4">★</span>
       <span class="stars" data-rating="5">★</span>
     </div>
-  <button id="submit-btn">ส่งรีวิว</button>
+    <textarea id="comment" rows="3" placeholder="แสดงความคิดเห็นของคุณ..."></textarea>
+    <button id="submit-btn">ส่งรีวิว</button>
     <div id="spinner">กำลังโหลดรีวิว...</div>
     <div class="average-rating">คะแนนเฉลี่ย: <span id="average">-</span></div>
     <div class="count">จำนวนผู้รีวิวทั้งหมด: <span id="review-count">0</span></div>
@@ -262,7 +264,12 @@
       return;
     }
 
-    // ดึง IP
+    const comment = document.getElementById('comment').value.trim();
+    if (!comment) {
+      alert("กรุณากรอกความคิดเห็นก่อนส่งรีวิว");
+      return;
+    }
+
     let ip = "ไม่ระบุ";
     try {
       const res = await fetch('https://api.ipify.org?format=json');
@@ -274,13 +281,16 @@
 
     db.collection("reviews").add({
       rating: selectedRating,
+      comment: comment,
       ip: ip,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
       document.getElementById('ding-sound').play();
       selectedRating = 0;
       updateStarDisplay(0);
+      document.getElementById('comment').value = '';
       loadReviews();
+      alert("ขอบคุณสำหรับรีวิวของคุณ!");
     });
   }
 
@@ -301,6 +311,7 @@
         const data = doc.data();
         const time = data.timestamp?.toDate().toLocaleString('th-TH') || '';
         const reviewId = `review-${doc.id}`;
+        const comment = data.comment || "";
 
         html += `
           <div class="review-item" onclick="toggleReview('${reviewId}')">
@@ -308,6 +319,7 @@
             <div>คะแนน: ${'★'.repeat(data.rating)}</div>
             <div class="review-date">${time}</div>
             <div class="review-comment collapsed" id="${reviewId}">
+              <div style="margin-top:5px;">"${comment}"</div>
               <div class="review-date">IP: ${data.ip || "ไม่ระบุ"}</div>
             </div>
           </div>
@@ -322,18 +334,18 @@
       spinner.style.display = "none";
     });
   }
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.stars').forEach(star => {
-    star.addEventListener('click', () => {
-      selectedRating = parseInt(star.dataset.rating);
-      updateStarDisplay(selectedRating);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.stars').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.rating);
+        updateStarDisplay(selectedRating);
+      });
     });
+
+    document.getElementById("submit-btn").addEventListener("click", submitReview);
+    loadReviews();
   });
-
-  document.getElementById("submit-btn").addEventListener("click", submitReview);
-
-  loadReviews(); alert("ขอบคุณสำหรับรีวิวของคุณ!");
-});
 </script>
 </body>
 </html>
