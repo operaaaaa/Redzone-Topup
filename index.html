@@ -384,20 +384,7 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   });
 
   // ระบบเลื่อนแล้วเปิดอัตโนมัติ
-  const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      setTimeout(() => {
-        entry.target.classList.add('active');
-      }, 300); // ดีเลย์ 0.3 วินาทีก่อนแสดง
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.85 });
-
-document.querySelectorAll('.product-box').forEach(box => {
-  observer.observe(box);
-});
+  
 
   // Dynamic product options
   const products = {
