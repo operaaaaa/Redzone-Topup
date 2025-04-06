@@ -159,6 +159,21 @@
         font-size: 24px;
       }
     }
+    .review-comment.collapsed {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+}
+
+.review-comment {
+  max-height: 100px;
+  opacity: 1;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -180,7 +195,6 @@
       <span class="stars" data-rating="4">★</span>
       <span class="stars" data-rating="5">★</span>
     </div>
-    <textarea id="comment" rows="3" placeholder="เขียนคอมเม้นท์ของคุณ..."></textarea><br/>
     <button onclick="submitReview()">ส่งรีวิว</button>
     <div id="spinner">กำลังโหลดรีวิว...</div>
     <div class="average-rating">คะแนนเฉลี่ย: <span id="average">-</span></div>
@@ -221,83 +235,103 @@
 
   <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="40" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-      authDomain: "redzone-topup-852a2.firebaseapp.com",
-      projectId: "redzone-topup-852a2",
-      storageBucket: "redzone-topup-852a2.appspot.com",
-      messagingSenderId: "209606560486",
-      appId: "1:209606560486:web:d12baa8545d99adad14927"
-    };
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+    authDomain: "redzone-topup-852a2.firebaseapp.com",
+    projectId: "redzone-topup-852a2",
+    storageBucket: "redzone-topup-852a2.appspot.com",
+    messagingSenderId: "209606560486",
+    appId: "1:209606560486:web:d12baa8545d99adad14927"
+  };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    let selectedRating = 0;
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  let selectedRating = 0;
 
-    function updateStarDisplay(rating) {
-      document.querySelectorAll('.stars').forEach(star => {
-        const value = parseInt(star.dataset.rating);
-        star.classList.toggle('active', value <= rating);
-      });
+  function updateStarDisplay(rating) {
+    document.querySelectorAll('.stars').forEach(star => {
+      const value = parseInt(star.dataset.rating);
+      star.classList.toggle('active', value <= rating);
+    });
+  }
+
+  async function submitReview() {
+    if (selectedRating === 0) {
+      alert("กรุณาเลือกดาวก่อนรีวิว");
+      return;
     }
 
-    function submitReview() {
-      const comment = document.getElementById('comment').value.trim();
-      if (selectedRating === 0) {
-        alert("กรุณาเลือกดาวก่อนรีวิว");
-        return;
-      }
-
-      db.collection("reviews").add({
-        rating: selectedRating,
-        comment: comment,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(() => {
-        document.getElementById('ding-sound').play();
-        document.getElementById('comment').value = '';
-        selectedRating = 0;
-        updateStarDisplay(0);
-        loadReviews();
-      });
+    // ดึง IP
+    let ip = "ไม่ระบุ";
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      ip = data.ip;
+    } catch (e) {
+      console.error("ไม่สามารถดึง IP ได้");
     }
 
-    function loadReviews() {
-      const spinner = document.getElementById("spinner");
-      spinner.style.display = "block";
-
-      db.collection("reviews").orderBy("timestamp", "desc").get().then(snapshot => {
-        let html = '';
-        let total = 0, count = 0;
-
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const time = data.timestamp?.toDate().toLocaleString('th-TH') || '';
-          html += `<div class="review-item">
-                    <div>คะแนน: ${'★'.repeat(data.rating)}</div>
-                    <div class="review-date">${time}</div>
-                    <div>${data.comment}</div>
-                   </div>`;
-          total += data.rating;
-          count++;
-        });
-
-        document.getElementById("review-list").innerHTML = html;
-        document.getElementById("review-count").innerText = count;
-        document.getElementById("average").innerText = count ? (total / count).toFixed(2) : "-";
-        spinner.style.display = "none";
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.stars').forEach(star => {
-        star.addEventListener('click', () => {
-          selectedRating = parseInt(star.dataset.rating);
-          updateStarDisplay(selectedRating);
-        });
-      });
+    db.collection("reviews").add({
+      rating: selectedRating,
+      ip: ip,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      document.getElementById('ding-sound').play();
+      selectedRating = 0;
+      updateStarDisplay(0);
       loadReviews();
     });
-  </script>
+  }
+
+  function toggleReview(id) {
+    const element = document.getElementById(id);
+    element.classList.toggle('collapsed');
+  }
+
+  function loadReviews() {
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "block";
+
+    db.collection("reviews").orderBy("timestamp", "desc").get().then(snapshot => {
+      let html = '';
+      let total = 0, count = 0;
+
+      snapshot.forEach((doc, index) => {
+        const data = doc.data();
+        const time = data.timestamp?.toDate().toLocaleString('th-TH') || '';
+        const reviewId = `review-${doc.id}`;
+
+        html += `
+          <div class="review-item" onclick="toggleReview('${reviewId}')">
+            <div><strong>Member ${index + 1}</strong></div>
+            <div>คะแนน: ${'★'.repeat(data.rating)}</div>
+            <div class="review-date">${time}</div>
+            <div class="review-comment collapsed" id="${reviewId}">
+              <div class="review-date">IP: ${data.ip || "ไม่ระบุ"}</div>
+            </div>
+          </div>
+        `;
+        total += data.rating;
+        count++;
+      });
+
+      document.getElementById("review-list").innerHTML = html;
+      document.getElementById("review-count").innerText = count;
+      document.getElementById("average").innerText = count ? (total / count).toFixed(2) : "-";
+      spinner.style.display = "none";
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.stars').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.rating);
+        updateStarDisplay(selectedRating);
+      });
+    });
+    loadReviews();
+  });
+</script>
 </body>
 </html>
