@@ -66,71 +66,6 @@
       text-shadow: 0 0 5px #fff;
     }
 
-    .stars {
-      font-size: 28px;
-      margin: 5px;
-      color: #555;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .stars.active {
-      color: #ffcc00;
-    }
-
-    textarea {
-      width: 90%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
-      background: #2a2a2a;
-      color: #fff;
-      border: none;
-      resize: none;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #ff4c4c;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #ff1a1a;
-    }
-
-    .average-rating {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #ffcc00;
-    }
-
-    .review-list {
-      text-align: left;
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 0 10px;
-    }
-
-    .review-item {
-      background: #2c2c2c;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #ff4c4c55;
-    }
-
-    .review-date {
-      font-size: 12px;
-      color: #ccc;
-    }
-
     .product-list p {
       margin: 5px 0;
     }
@@ -141,11 +76,6 @@
       filter: drop-shadow(0 0 6px white);
     }
 
-    #spinner {
-      display: none;
-      margin-top: 10px;
-    }
-
     @media (max-width: 480px) {
       .section {
         padding: 15px;
@@ -154,59 +84,13 @@
       .logo {
         width: 100px;
       }
-
-      .stars {
-        font-size: 24px;
-      }
-    }
-
-    .review-comment.collapsed {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: all 0.3s ease;
-      padding: 0;
-      margin: 0;
-    }
-
-    .review-comment {
-      max-height: 100px;
-      opacity: 1;
-      transition: all 0.3s ease;
-      margin-top: 5px;
     }
   </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <audio id="ding-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b92e8755e.mp3?filename=notification-5-21466.mp3" preload="auto"></audio>
-
   <img src="https://www.example.com/logo.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
   <div class="title">RedZone Topup</div>
   <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
-
-  <div class="section">
-    <h3>รีวิวร้าน</h3>
-    <div id="star-container">
-      <span class="stars" data-rating="1">★</span>
-      <span class="stars" data-rating="2">★</span>
-      <span class="stars" data-rating="3">★</span>
-      <span class="stars" data-rating="4">★</span>
-      <span class="stars" data-rating="5">★</span>
-    </div>
-    <textarea id="comment" rows="3" placeholder="แสดงความคิดเห็นของคุณ..."></textarea>
-    <button id="submit-btn">ส่งรีวิว</button>
-    <div id="spinner">กำลังโหลดรีวิว...</div>
-    <div class="average-rating">คะแนนเฉลี่ย: <span id="average">-</span></div>
-    <div class="count">จำนวนผู้รีวิวทั้งหมด: <span id="review-count">0</span></div>
-  </div>
-
-  <div class="section">
-    <h3>รีวิวล่าสุด</h3>
-    <div class="review-list" id="review-list"></div>
-  </div>
 
   <div class="section">
     <h3>รายการสินค้า</h3>
@@ -236,110 +120,111 @@
   </div>
 
   <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="40" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
+  <button id="openChatBtn" style="position:fixed;bottom:20px;right:20px;z-index:999;padding:10px 20px;background:red;color:white;border:none;border-radius:10px;box-shadow:0 0 10px red;">เปิดแชท</button>
+
+<div id="chatPopup" style="display:none;position:fixed;bottom:80px;right:20px;width:300px;background:#1c1c1c;border:2px solid red;border-radius:10px;z-index:1000;box-shadow:0 0 15px red;">
+  <div style="padding:10px;color:white;border-bottom:1px solid red;display:flex;justify-content:space-between;align-items:center;">
+    <span>แชทสด</span>
+    <button onclick="closeChat()" style="background:none;border:none;color:white;font-size:16px;">✖</button>
+  </div>
+  <div id="chatRoleSelect" style="padding:10px;text-align:center;">
+    <p>เลือกบทบาท</p>
+    <button onclick="selectRole('customer')" style="margin:5px;">ลูกค้า</button>
+    <button onclick="showAdminLogin()" style="margin:5px;">แอดมิน</button>
+  </div>
+  <div id="adminLogin" style="display:none;padding:10px;">
+    <input id="adminUser" placeholder="Username" style="width:90%;margin-bottom:5px;"><br>
+    <input id="adminPass" type="password" placeholder="Password" style="width:90%;margin-bottom:10px;"><br>
+    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
+  </div>
+  <div id="chatBox" style="display:none;height:300px;overflow-y:auto;padding:10px;color:white;font-size:14px;"></div>
+  <div id="chatInputArea" style="display:none;padding:10px;border-top:1px solid red;">
+    <input id="chatInput" placeholder="พิมพ์ข้อความ..." style="width:80%;">
+    <button onclick="sendMessage()">ส่ง</button>
+  </div>
+</div>
+</body>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-    authDomain: "redzone-topup-852a2.firebaseapp.com",
-    projectId: "redzone-topup-852a2",
-    storageBucket: "redzone-topup-852a2.appspot.com",
-    messagingSenderId: "209606560486",
-    appId: "1:209606560486:web:d12baa8545d99adad14927"
+    apiKey: "AIzaSyCL1-u8VFbvW9763J53toozhSuP-xv4C-0",
+    authDomain: "redzone-topup.firebaseapp.com",
+    projectId: "redzone-topup",
+    storageBucket: "redzone-topup.appspot.com",
+    messagingSenderId: "25853216897",
+    appId: "1:25853216897:web:5712eb71623b19e588a580"
   };
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  let selectedRating = 0;
 
-  function updateStarDisplay(rating) {
-    document.querySelectorAll('.stars').forEach(star => {
-      const value = parseInt(star.dataset.rating);
-      star.classList.toggle('active', value <= rating);
+  let currentRole = '';
+  let chatUserId = 'user_' + Date.now();
+
+  document.getElementById('openChatBtn').onclick = () => {
+    document.getElementById('chatPopup').style.display = 'block';
+  };
+
+  function closeChat() {
+    document.getElementById('chatPopup').style.display = 'none';
+    document.getElementById('chatBox').innerHTML = '';
+  }
+
+  function selectRole(role) {
+    currentRole = role;
+    document.getElementById('chatRoleSelect').style.display = 'none';
+    document.getElementById('chatBox').style.display = 'block';
+    document.getElementById('chatInputArea').style.display = 'block';
+    listenForMessages();
+  }
+
+  function showAdminLogin() {
+    document.getElementById('chatRoleSelect').style.display = 'none';
+    document.getElementById('adminLogin').style.display = 'block';
+  }
+
+  function loginAdmin() {
+    const user = document.getElementById('adminUser').value;
+    const pass = document.getElementById('adminPass').value;
+    if (user === 'admin' && pass === 'admin') {
+      currentRole = 'admin';
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('chatBox').style.display = 'block';
+      document.getElementById('chatInputArea').style.display = 'block';
+      listenForMessages();
+    } else {
+      alert('เข้าสู่ระบบไม่สำเร็จ');
+    }
+  }
+
+  function sendMessage() {
+    const msg = document.getElementById('chatInput').value;
+    if (msg.trim() === '') return;
+    db.collection("chat").add({
+      sender: currentRole === 'admin' ? 'admin' : chatUserId,
+      text: msg,
+      role: currentRole,
+      timestamp: Date.now()
     });
+    document.getElementById('chatInput').value = '';
   }
 
-  function toggleReview(id) {
-    const element = document.getElementById(id);
-    if (element) element.classList.toggle('collapsed');
-  }
-
-  function loadReviews() {
-    const spinner = document.getElementById("spinner");
-    spinner.style.display = "block";
-
-    db.collection("reviews").orderBy("timestamp", "desc").get().then(snapshot => {
-      let html = '';
-      let total = 0, count = 0;
-
-      snapshot.forEach((doc, index) => {
+  function listenForMessages() {
+    db.collection("chat").orderBy("timestamp").onSnapshot(snapshot => {
+      const chatBox = document.getElementById('chatBox');
+      chatBox.innerHTML = '';
+      snapshot.forEach(doc => {
         const data = doc.data();
-        const time = data.timestamp?.toDate().toLocaleString('th-TH') || '';
-        const reviewId = `review-${doc.id}`;
-        const comment = data.comment || "";
-
-        html += `
-          <div class="review-item" onclick="toggleReview('${reviewId}')">
-            <div><strong>Member ${index + 1}</strong></div>
-            <div>คะแนน: ${'★'.repeat(data.rating)}</div>
-            <div class="review-date">${time}</div>
-            <div class="review-comment collapsed" id="${reviewId}">
-              <div style="margin-top:5px;">"${comment}"</div>
-            </div>
-          </div>
-        `;
-        total += data.rating;
-        count++;
+        const isAdmin = data.role === 'admin';
+        const msgClass = isAdmin ? 'color:red;' : 'color:white;';
+        const label = isAdmin ? 'แอดมิน' : 'ลูกค้า';
+        chatBox.innerHTML += `<div style="${msgClass}"><strong>${label}:</strong> ${data.text}</div>`;
       });
-
-      document.getElementById("review-list").innerHTML = html;
-      document.getElementById("review-count").innerText = count;
-      document.getElementById("average").innerText = count ? (total / count).toFixed(2) : "-";
-      spinner.style.display = "none";
+      chatBox.scrollTop = chatBox.scrollHeight;
     });
   }
-
-  async function submitReview() {
-    if (selectedRating === 0) {
-      alert("กรุณาเลือกดาวก่อนรีวิว");
-      return;
-    }
-
-    const comment = document.getElementById('comment').value.trim();
-    if (!comment) {
-      alert("กรุณากรอกความคิดเห็นก่อนส่งรีวิว");
-      return;
-    }
-
-    try {
-      await db.collection("reviews").add({
-        rating: selectedRating,
-        comment: comment,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-      document.getElementById('ding-sound').play();
-      selectedRating = 0;
-      updateStarDisplay(0);
-      document.getElementById('comment').value = '';
-      loadReviews();
-      alert("ขอบคุณสำหรับรีวิวของคุณ!");
-    } catch (error) {
-      alert("เกิดข้อผิดพลาดในการส่งรีวิว");
-      console.error(error);
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.stars').forEach(star => {
-      star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.rating);
-        updateStarDisplay(selectedRating);
-      });
-    });
-
-    document.getElementById("submit-btn").addEventListener("click", submitReview);
-    loadReviews();
-  });
 </script>
-</body>
 </html>
