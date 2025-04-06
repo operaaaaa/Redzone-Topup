@@ -219,14 +219,114 @@
         </div>
       </div>
     </div>
-  </div>
+    <div class="section">
+  <h3 style="color:#fff; text-shadow:0 0 6px red; margin-bottom: 20px;">ระบบสั่งซื้อสินค้า</h3>
 
+  <form id="orderForm">
+    <label>ชื่อจริง - นามสกุล:</label><br>
+    <input type="text" id="fullName" required style="width: 100%; padding: 8px; margin: 10px 0;"><br>
+
+    <label>เลือกหัวข้อสินค้า:</label><br>
+    <select id="category" required style="width: 100%; padding: 8px; margin: 10px 0;">
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="RoV">RoV</option>
+      <option value="Minecraft">Minecraft</option>
+      <option value="Roblox">Roblox</option>
+      <option value="TrueMoney Wallet">TrueMoney Wallet</option>
+    </select><br>
+
+    <label>เลือกรายการสินค้า:</label><br>
+    <select id="product" required style="width: 100%; padding: 8px; margin: 10px 0;">
+      <option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>
+    </select><br>
+
+    <label>อัปโหลดสลิปพร้อมกรอกเลขอ้างอิง (หลังโอน):</label><br>
+    <input type="file" id="slipFile" accept="image/*" required style="margin: 10px 0;"><br>
+    <input type="text" id="refNumber" placeholder="กรอกเลขอ้างอิงจากสลิป" required style="width: 100%; padding: 8px;"><br><br>
+
+    <button type="submit" style="padding: 10px 20px; background: red; color: white; border: none; font-family: 'Orbitron'; box-shadow: 0 0 10px red;">ยืนยันสั่งซื้อ</button>
+  </form>
+
+  <div id="orderSuccess" style="display:none; margin-top:15px; color:lightgreen;">ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง</div>
+</div>
+  </div>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
   <script>
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+  authDomain: "redzone-topup-852a2.firebaseapp.com",
+  projectId: "redzone-topup-852a2",
+  storageBucket: "redzone-topup-852a2.appspot.com", // แก้ตรงนี้
+  messagingSenderId: "209606560486",
+  appId: "1:209606560486:web:d12baa8545d99adad14927",
+  measurementId: "G-T1WWTKDY79"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
     document.querySelectorAll('.product-box').forEach(box => {
       box.querySelector('.product-header').addEventListener('click', () => {
         box.classList.toggle('active');
       });
     });
+    const products = {
+  "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
+  "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
+  "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
+  "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
+};
+
+document.getElementById('category').addEventListener('change', function () {
+  const productSelect = document.getElementById('product');
+  productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
+  const selected = this.value;
+  if (products[selected]) {
+    products[selected].forEach(item => {
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+      productSelect.appendChild(option);
+    });
+  }
+});
+
+document.getElementById('orderForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const fullName = document.getElementById('fullName').value;
+  const category = document.getElementById('category').value;
+  const product = document.getElementById('product').value;
+  const refNumber = document.getElementById('refNumber').value;
+  const file = document.getElementById('slipFile').files[0];
+
+  if (!file) return alert("กรุณาอัปโหลดสลิป");
+
+  const timestamp = new Date().toISOString();
+  const storageRef = firebase.storage().ref(`slips/${timestamp}_${file.name}`);
+  await storageRef.put(file);
+  const slipURL = await storageRef.getDownloadURL();
+
+  await firebase.firestore().collection("orders").add({
+    fullName,
+    category,
+    product,
+    refNumber,
+    slipURL,
+    timestamp,
+    status: "รอตรวจสอบ"
+  });
+
+  document.getElementById('orderForm').reset();
+  document.getElementById('orderSuccess').style.display = 'block';
+});
   </script>
 </body>
 </html>
