@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+        <script src='Winwheel.js'></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -212,10 +213,12 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <h4>@redzone_topup</h4>
+       <canvas id='canvas' width='880' height='300'>
+            Canvas ไม่รองรับ กรุณาใช้เบราว์เซอร์อื่น
+        </canvas>
     <div class="section">
       <h3>รายการสินค้า</h3>
       <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด<h5>
-
       <div class="product-box">
         <div class="product-header">RoV (Garena คูปอง)</div>
         <div class="product-details">
@@ -373,7 +376,42 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   });
 
 </script>
+    <script>
+            let theWheel = new Winwheel({
+                'numSegments'  : 11,        // จำนวน segments รวมตัวเลือกที่ไม่ได้รับรางวัล
+                'outerRadius'  : 212,       // ขนาดของวงล้อ
+                'centerX'     : 217,        // ตำแหน่ง X ของศูนย์กลางวงล้อ
+                'centerY'     : 219,        // ตำแหน่ง Y ของศูนย์กลางวงล้อ
+                'textFontSize' : 28,         // ขนาดฟอนต์ของข้อความ
+                'segments'    : [
+                    {'fillStyle' : '#eae56f', 'text' : 'รางวัลที่ 1'},
+                    {'fillStyle' : '#89f26e', 'text' : 'รางวัลที่ 2'},
+                    {'fillStyle' : '#7de6ef', 'text' : 'รางวัลที่ 3'},
+                    {'fillStyle' : '#e7706f', 'text' : 'รางวัลที่ 4'},
+                    {'fillStyle' : '#eae56f', 'text' : 'รางวัลที่ 5'},
+                    {'fillStyle' : '#89f26e', 'text' : 'รางวัลที่ 6'},
+                    {'fillStyle' : '#7de6ef', 'text' : 'รางวัลที่ 7'},
+                    {'fillStyle' : '#e7706f', 'text' : 'รางวัลที่ 8'},
+                    {'fillStyle' : '#eae56f', 'text' : 'รางวัลที่ 9'},
+                    {'fillStyle' : '#89f26e', 'text' : 'รางวัลที่ 10'},
+                    {'fillStyle' : '#cccccc', 'text' : 'ไม่มีรางวัล'}
+                ],
+                'animation' : {
+                    'type'     : 'spinToStop',
+                    'duration' : 5,
+                    'spins'    : 8,
+                    'stopAngle' : 0, // หยุดที่ segment ที่ไม่มีรางวัล
+                    'callbackFinished' : alertPrize
+                }
+            });
 
+            // ฟังก์ชันที่เรียกเมื่อการหมุนเสร็จสิ้น
+            function alertPrize(indicatedSegment)
+            {
+                // แสดงข้อความของ segment ที่ถูกเลือก
+                alert("คุณได้รับ: " + indicatedSegment.text);
+            }
+        </script>
 
 </body>
 </html>
