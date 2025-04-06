@@ -322,16 +322,18 @@
       spinner.style.display = "none";
     });
   }
-document.getElementById("submit-btn").addEventListener("click", submitReview);
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.stars').forEach(star => {
-      star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.rating);
-        updateStarDisplay(selectedRating);
-      });
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.stars').forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = parseInt(star.dataset.rating);
+      updateStarDisplay(selectedRating);
     });
-    loadReviews();
   });
+
+  document.getElementById("submit-btn").addEventListener("click", submitReview);
+
+  loadReviews();
+});
 </script>
 </body>
 </html>
