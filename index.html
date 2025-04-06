@@ -250,53 +250,59 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   let selectedRating = 0;
+  let submitting = false;
 
   function updateStarDisplay(rating) {
     document.querySelectorAll('.stars').forEach(star => {
       const value = parseInt(star.dataset.rating);
-      star.classList.toggle('active', value <= rating);
+      if (value <= rating) {
+        star.classList.add('active');
+      } else {
+        star.classList.remove('active');
+      }
     });
   }
 
   async function submitReview() {
+    if (submitting) return;
+    submitting = true;
+
     if (selectedRating === 0) {
       alert("กรุณาเลือกดาวก่อนรีวิว");
+      submitting = false;
       return;
     }
 
     const comment = document.getElementById('comment').value.trim();
     if (!comment) {
       alert("กรุณากรอกความคิดเห็นก่อนส่งรีวิว");
+      submitting = false;
       return;
     }
 
-    let ip = "ไม่ระบุ";
     try {
-      const res = await fetch('https://api.ipify.org?format=json');
-      const data = await res.json();
-      ip = data.ip;
-    } catch (e) {
-      console.error("ไม่สามารถดึง IP ได้");
-    }
+      await db.collection("reviews").add({
+        rating: selectedRating,
+        comment: comment,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
 
-    db.collection("reviews").add({
-      rating: selectedRating,
-      comment: comment,
-      ip: ip,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
       document.getElementById('ding-sound').play();
       selectedRating = 0;
       updateStarDisplay(0);
       document.getElementById('comment').value = '';
-      loadReviews();
       alert("ขอบคุณสำหรับรีวิวของคุณ!");
-    });
+      loadReviews();
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการส่งรีวิว");
+    }
+
+    submitting = false;
   }
 
   function toggleReview(id) {
-    const element = document.getElementById(id);
-    element.classList.toggle('collapsed');
+    const el = document.getElementById(id);
+    el?.classList.toggle("collapsed");
   }
 
   function loadReviews() {
@@ -320,10 +326,10 @@
             <div class="review-date">${time}</div>
             <div class="review-comment collapsed" id="${reviewId}">
               <div style="margin-top:5px;">"${comment}"</div>
-              <div class="review-date">IP: ${data.ip || "ไม่ระบุ"}</div>
             </div>
           </div>
         `;
+
         total += data.rating;
         count++;
       });
@@ -332,6 +338,9 @@
       document.getElementById("review-count").innerText = count;
       document.getElementById("average").innerText = count ? (total / count).toFixed(2) : "-";
       spinner.style.display = "none";
+    }).catch(() => {
+      spinner.style.display = "none";
+      alert("เกิดข้อผิดพลาดในการโหลดรีวิว");
     });
   }
 
