@@ -215,9 +215,32 @@
       background: none;
       border: none;
     }
+    #client-info-box {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid red;
+  border-radius: 10px;
+  padding: 10px 15px;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px red;
+  z-index: 9999;
+}
+#client-info-box p {
+  margin: 2px 0;
+}
   </style>
 </head>
 <body>
+  <div id="client-info-box">
+  <p id="datetime"></p>
+  <p id="useragent"></p>
+  <p id="ipaddress">IP: Loading...</p>
+</div>
   <!-- Advertisement Popup -->
   <div class="container">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
@@ -392,6 +415,33 @@
       console.error("Error submitting order: ", err);
       alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
     }
+  });
+</script>
+<script>
+// อัปเดตวัน/เวลา
+function updateDateTime() {
+  const now = new Date();
+  const options = {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  };
+  document.getElementById('datetime').textContent = now.toLocaleString('th-TH', options);
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// แสดงชื่อเครื่อง (User Agent)
+document.getElementById('useragent').textContent = "เครื่อง: " + navigator.userAgent;
+
+// ดึง IP Address
+fetch('https://api.ipify.org?format=json')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('ipaddress').textContent = 'IP: ' + data.ip;
+  })
+  .catch(err => {
+    document.getElementById('ipaddress').textContent = 'IP: ไม่สามารถโหลดได้';
   });
 </script>
 </body>
