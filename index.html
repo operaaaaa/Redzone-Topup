@@ -499,15 +499,21 @@
       alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
     }
   });
-  fetch('https://api.ipify.org?format=json')
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('userIP').textContent = `IP ของคุณ: ${data.ip}`;
-    document.getElementById('name')?.value = data.ip; // ใส่ชื่อ IP ในฟอร์มถ้ามี input#name
-  })
-  .catch(() => {
-    document.getElementById('userIP').textContent = 'IP ของคุณ: ไม่สามารถโหลดได้';
+  window.addEventListener('DOMContentLoaded', () => {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('userIP').textContent = `IP ของคุณ: ${data.ip}`;
+        // ถ้ามี input ที่จะใส่ชื่อเป็น IP
+        const nameInput = document.getElementById('name');
+        if (nameInput) nameInput.value = data.ip;
+      })
+      .catch(err => {
+        console.error('ไม่สามารถดึง IP ได้:', err);
+        document.getElementById('userIP').textContent = 'IP ของคุณ: ไม่สามารถโหลดได้';
+      });
   });
+</script
 </script>
 <script>
   function updateTime() {
