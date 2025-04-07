@@ -314,6 +314,54 @@
   background-color: red;
   color: black;
 }
+.popup-box {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: #111;
+  border: 2px solid red;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px red;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-content button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  font-family: 'Orbitron', sans-serif;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.popup-content button:hover {
+  background: #ff4444;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
   </style>
 </head>
 <body>
@@ -602,6 +650,12 @@ document.getElementById("daily-lucky-btn").addEventListener("click", handleDaily
     }
   }, 40); // ปรับความเร็วได้
 </script>
+<div id="popup-box" class="popup-box hidden">
+  <div class="popup-content">
+    <p id="popup-message">ข้อความจากระบบ</p>
+    <button id="popup-close">ปิด</button>
+  </div>
+</div>
 </body>
 </body>
 </html>
