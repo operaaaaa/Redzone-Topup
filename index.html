@@ -336,7 +336,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
@@ -345,60 +345,50 @@
     authDomain: "redzone-topup-852a2.firebaseapp.com",
     projectId: "redzone-topup-852a2",
     storageBucket: "redzone-topup-852a2.appspot.com",
-    messagingSenderId: "847202182344",
-    appId: "1:847202182344:web:9b7b63e1c28930c3a1671d"
+    messagingSenderId: "209606560486",
+    appId: "1:209606560486:web:d12baa8545d99adad14927",
+    measurementId: "G-T1WWTKDY79"
   };
 
-  // เริ่มต้น Firebase
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const analytics = getAnalytics(app);
   const storage = getStorage(app);
+  const db = getFirestore(app);
 
-  // สินค้าแยกตามหมวด
+  // Accordion toggle
+  document.querySelectorAll('.product-box').forEach(box => {
+    box.querySelector('.product-header').addEventListener('click', () => {
+      box.classList.toggle('active');
+    });
+  });
+
+  // Dynamic dropdown
   const products = {
-    "RoV": [
-      "50฿ → 51 คูปอง",
-      "90฿ → 96 คูปอง",
-      "150฿ → 160 คูปอง",
-      "300฿ → 325 คูปอง",
-      "1,000฿ → ~1,200 คูปอง"
-    ],
-    "Minecraft": [
-      "Java / Bedrock ~580฿",
-      "Minecoins 1,720: ~296฿",
-      "Minecoins 3,500: ~587฿"
-    ],
-    "Roblox": [
-      "400 Robux: ~179฿",
-      "800 Robux: ~359฿",
-      "1,700 Robux: ~719฿",
-      "Premium เริ่มที่ ~179฿/เดือน"
-    ],
-    "TrueMoney Wallet": [
-      "เติมตามยอดจริง 50฿, 100฿, 500฿",
-      "ค่าธรรมเนียมตามช่องทาง"
-    ]
+    "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
+    "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
+    "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
+    "TrueMoney Wallet": ["เติมตามยอดจริง 50฿", "100฿", "500฿", "ค่าธรรมเนียมตามช่องทาง"]
   };
 
-  // ดรอปดาวน์หมวดหมู่
   const categorySelect = document.getElementById("category");
   const productSelect = document.getElementById("product");
 
   categorySelect.addEventListener("change", () => {
     const selectedCategory = categorySelect.value;
-    productSelect.innerHTML = '<option value="">-- กรุณาเลือกรายการ --</option>';
+    productSelect.innerHTML = "<option value=''>-- กรุณาเลือกรายการ --</option>";
     if (products[selectedCategory]) {
-      products[selectedCategory].forEach(product => {
+      products[selectedCategory].forEach(item => {
         const option = document.createElement("option");
-        option.value = product;
-        option.textContent = product;
+        option.value = item;
+        option.textContent = item;
         productSelect.appendChild(option);
       });
     }
   });
 
-  // ระบบอัปโหลดสลิปและส่งคำสั่งซื้อ
+  // Handle form submit
   const orderForm = document.getElementById("orderForm");
+  const successMsg = document.getElementById("orderSuccess");
 
   orderForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -417,45 +407,44 @@
     try {
       const timestamp = Date.now();
       const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
-      await uploadBytes(storageRef, slipFile);
-      const slipURL = await getDownloadURL(storageRef);
+      const snapshot = await uploadBytes(storageRef, slipFile);
+      const downloadURL = await getDownloadURL(snapshot.ref);
 
       await addDoc(collection(db, "orders"), {
         fullName,
         category,
         product,
         refNumber,
-        slipURL,
-        createdAt: serverTimestamp()
+        slipUrl: downloadURL,
+        timestamp: serverTimestamp()
       });
 
-      document.getElementById("orderSuccess").style.display = "block";
+      successMsg.style.display = "block";
       orderForm.reset();
-      productSelect.innerHTML = '<option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>';
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาด: ", error);
-      alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ กรุณาลองใหม่");
+      productSelect.innerHTML = "<option value=''>-- กรุณาเลือกหมวดหมู่ก่อน --</option>";
+    } catch (err) {
+      console.error("Error submitting order: ", err);
+      alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
     }
   });
-
-  // ระบบ accordion สำหรับสินค้า
-  const productBoxes = document.querySelectorAll(".product-box");
-  productBoxes.forEach(box => {
-    const header = box.querySelector(".product-header");
-    header.addEventListener("click", () => {
-      box.classList.toggle("active");
-    });
-  });
-
-  // ระบบแสดงเวลา
-  const timeEl = document.getElementById("time-only");
+</script>
+<script>
   function updateTime() {
     const now = new Date();
-    timeEl.textContent = `เวลาปัจจุบัน: ${now.toLocaleTimeString('th-TH')}`;
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    const formattedTime = now.toLocaleString('th-TH', options);
+    document.getElementById('time-only').textContent = 'Thailand Zone🇹🇭: ' + formattedTime;
   }
+
   setInterval(updateTime, 1000);
-  updateTime();
-</script>
+  updateTime(); // เรียกทันทีตอนโหลด
 </script>
 </body>
 </html>
