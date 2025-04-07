@@ -527,70 +527,52 @@
 
   setInterval(updateTime, 1000);
   updateTime(); // เรียกทันทีตอนโหลด
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, setDoc, Timestamp
-} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  getFirestore, collection, doc, setDoc, getDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+  authDomain: "redzone-topup-852a2.firebaseapp.com",
+  projectId: "redzone-topup-852a2",
+  storageBucket: "redzone-topup-852a2.appspot.com",
+  messagingSenderId: "332775681015",
+  appId: "1:332775681015:web:a7b97c9f9d172b1a3d5d69"
+};
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-    authDomain: "redzone-topup-852a2.firebaseapp.com",
-    projectId: "redzone-topup-852a2"
-  };
+async function getUserIP() {
+  const res = await fetch("https://api.ipify.org?format=json");
+  const data = await res.json();
+  return data.ip;
+}
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+document.getElementById("daily-lucky-btn").addEventListener("click", async () => {
+  const ip = await getUserIP();
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const docRef = doc(db, "dailyLuck", ip);
 
-  const rewards = ["เพชร 5 เม็ด", "บัตรเงินสด 20 บาท", "แต้ม 10 แต้ม", "ไอเทมลับ 1 ชิ้น", "กล่องสุ่มฟรี 1 ครั้ง"];
-
-  async function getUserIP() {
-    try {
-      const res = await fetch("https://api.ipify.org?format=json");
-      const data = await res.json();
-      return data.ip;
-    } catch (error) {
-      console.error("ไม่สามารถดึง IP ได้", error);
-      return null;
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const lastDate = docSnap.data().date;
+    if (lastDate === today) {
+      alert("คุณใช้สิทธิ์สุ่มของวันนี้ไปแล้ว ลองใหม่พรุ่งนี้นะ!");
+      return;
     }
   }
 
-  document.getElementById("claim-reward-btn").addEventListener("click", async () => {
-    const resultEl = document.getElementById("reward-result");
-    resultEl.textContent = "กำลังตรวจสอบ...";
-
-    const ip = await getUserIP();
-    if (!ip) {
-      resultEl.textContent = "ไม่สามารถดึง IP ได้ กรุณาลองใหม่";
-      return;
-    }
-
-    const userRef = doc(db, "daily_rewards", ip);
-    const docSnap = await getDoc(userRef);
-    const now = new Date();
-
-    if (docSnap.exists()) {
-      const lastClaim = docSnap.data().lastClaim.toDate();
-      const sameDay = lastClaim.toDateString() === now.toDateString();
-
-      if (sameDay) {
-        resultEl.textContent = `คุณสุ่มแล้ววันนี้: ${docSnap.data().reward} (กลับมาใหม่พรุ่งนี้นะ!)`;
-        return;
-      }
-    }
-
-    const reward = rewards[Math.floor(Math.random() * rewards.length)];
-
-    await setDoc(userRef, {
-      lastClaim: Timestamp.now(),
-      reward: reward
-    });
-
-    resultEl.textContent = `คุณได้รับ: ${reward}`;
+  await setDoc(docRef, {
+    ip: ip,
+    date: today,
+    time: serverTimestamp()
   });
+
+  alert("คุณไม่ได้รับของรางวัลในวันนี้ ไว้ลองใหม่พรุ่งนี้นะ!");
+});
 </script>
 <script>
   let percent = 0;
