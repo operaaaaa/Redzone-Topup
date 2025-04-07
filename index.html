@@ -428,16 +428,22 @@
   });
 </script>
 <script>
-function updateTimeOnly() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-  document.getElementById('time-only').textContent = `${hours}:${minutes}:${seconds}.${milliseconds}`;
-}
-setInterval(updateTimeOnly, 50); // รีเฟรชทุก 50 มิลลิวินาที
-updateTimeOnly();
+  function updateTime() {
+    const now = new Date();
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    const formattedTime = now.toLocaleString('th-TH', options);
+    document.getElementById('time-only').textContent = 'เวลาขณะนี้: ' + formattedTime;
+  }
+
+  setInterval(updateTime, 1000);
+  updateTime(); // เรียกทันทีตอนโหลด
 </script>
 </body>
 </html>
