@@ -308,6 +308,7 @@
   </style>
 </head>
 <body>
+  
 <div id="preloader-popup">
   <div class="preloader-box">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
@@ -554,7 +555,17 @@
   }, 40); // ปรับความเร็วได้
 </script>
 
-
+<script>
+  // ดึง IP ผู้ใช้งานผ่าน API
+  fetch("https://api.ipify.org?format=json")
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("userIP").textContent = "IP ของคุณ: " + data.ip;
+    })
+    .catch(() => {
+      document.getElementById("userIP").textContent = "IP ของคุณ: ไม่สามารถโหลดได้";
+    });
+</script>
 
 </body>
 </html>
