@@ -236,10 +236,10 @@
   </style>
 </head>
 <body>
-  <div id="client-info-box">
+<div id="client-info-box">
   <p id="datetime"></p>
-  <p id="useragent"></p>
   <p id="ipaddress">IP: Loading...</p>
+</div>
 </div>
   <!-- Advertisement Popup -->
   <div class="container">
@@ -432,7 +432,6 @@ setInterval(updateDateTime, 1000);
 updateDateTime();
 
 // แสดงชื่อเครื่อง (User Agent)
-document.getElementById('useragent').textContent = "เครื่อง: " + navigator.userAgent;
 
 // ดึง IP Address
 fetch('https://api.ipify.org?format=json')
