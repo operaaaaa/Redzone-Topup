@@ -333,16 +333,18 @@
     "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
     "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
     "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
-    "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
+    "TrueMoney Wallet": ["เติมตามยอดจริง 50฿", "100฿", "500฿", "ค่าธรรมเนียมตามช่องทาง"]
   };
 
-  document.getElementById('category').addEventListener('change', function () {
-    const productSelect = document.getElementById('product');
-    productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
-    const selected = this.value;
-    if (products[selected]) {
-      products[selected].forEach(item => {
-        const option = document.createElement('option');
+  const categorySelect = document.getElementById("category");
+  const productSelect = document.getElementById("product");
+
+  categorySelect.addEventListener("change", () => {
+    const selectedCategory = categorySelect.value;
+    productSelect.innerHTML = "<option value=''>-- กรุณาเลือกรายการ --</option>";
+    if (products[selectedCategory]) {
+      products[selectedCategory].forEach(item => {
+        const option = document.createElement("option");
         option.value = item;
         option.textContent = item;
         productSelect.appendChild(option);
@@ -350,57 +352,45 @@
     }
   });
 
-  // Submit form
-  const orderForm = document.getElementById('orderForm');
-  const orderSuccess = document.getElementById('orderSuccess');
-  const button = orderForm.querySelector('button[type="submit"]');
+  // Handle form submit
+  const orderForm = document.getElementById("orderForm");
+  const successMsg = document.getElementById("orderSuccess");
 
-  const ding = new Audio("https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3"); // เสียงติ๊ง
-
-  orderForm.addEventListener('submit', async (e) => {
+  orderForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    button.disabled = true;
-    button.innerHTML = 'กำลังส่ง...';
 
-    const fullName = document.getElementById('fullName').value.trim();
-    const category = document.getElementById('category').value;
-    const product = document.getElementById('product').value;
-    const refNumber = document.getElementById('refNumber').value.trim();
-    const slipFile = document.getElementById('slipFile').files[0];
+    const fullName = document.getElementById("fullName").value.trim();
+    const category = categorySelect.value;
+    const product = productSelect.value;
+    const refNumber = document.getElementById("refNumber").value.trim();
+    const slipFile = document.getElementById("slipFile").files[0];
 
     if (!fullName || !category || !product || !refNumber || !slipFile) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-      button.disabled = false;
-      button.innerHTML = 'ยืนยันสั่งซื้อ';
       return;
     }
 
     try {
       const timestamp = Date.now();
       const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
-      await uploadBytes(storageRef, slipFile);
-      const downloadURL = await getDownloadURL(storageRef);
+      const snapshot = await uploadBytes(storageRef, slipFile);
+      const downloadURL = await getDownloadURL(snapshot.ref);
 
       await addDoc(collection(db, "orders"), {
         fullName,
         category,
         product,
         refNumber,
-        slipURL: downloadURL,
-        createdAt: serverTimestamp()
+        slipUrl: downloadURL,
+        timestamp: serverTimestamp()
       });
 
-      orderSuccess.style.display = 'block';
-      ding.play();
-
-      // Reset form
+      successMsg.style.display = "block";
       orderForm.reset();
-      document.getElementById('product').innerHTML = '<option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>';
-    } catch (error) {
-      alert("เกิดข้อผิดพลาด: " + error.message);
-    } finally {
-      button.disabled = false;
-      button.innerHTML = 'ยืนยันสั่งซื้อ';
+      productSelect.innerHTML = "<option value=''>-- กรุณาเลือกหมวดหมู่ก่อน --</option>";
+    } catch (err) {
+      console.error("Error submitting order: ", err);
+      alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
     }
   });
 </script>
