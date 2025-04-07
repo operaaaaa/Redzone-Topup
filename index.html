@@ -398,6 +398,13 @@
     <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
       <p id="time-only"></p>
     <!-- ปุ่มสุ่ม -->
+    <!-- ปุ่มสุ่ม -->
+<button id="dailyDrawBtn" class="draw-btn">
+  <img src="https://cdn-icons-png.flaticon.com/512/2983/2983810.png" width="24" />
+  สุ่มของประจำวัน
+</button>
+
+<!-- Popup แสดงผล --
 <!-- Popup แสดงผล -->
 <div id="popup" class="popup hidden">
   <div class="close-btn" onclick="closePopup()">×</div>
@@ -685,11 +692,13 @@ async function getIP() {
 }
 </script>
 <script>
-function closePopup() {
-  const popup = document.getElementById('popup');
-  popup.classList.add('hidden');
-  popup.style.display = 'none';
+  function closePopup() {
+    document.getElementById("popup").classList.add("hidden");
+  }
+  function showPopup() {
+  document.getElementById("popup").classList.remove("hidden");
 }
 </script>
+
 </body>
 </html>
