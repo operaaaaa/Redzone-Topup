@@ -350,49 +350,45 @@
       }
     });
 
-    // Order form
-    document.getElementById('orderForm').addEventListener('submit', async function (e) {
+    // Handle form submission
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const fullName = document.getElementById('fullName').value;
       const category = document.getElementById('category').value;
       const product = document.getElementById('product').value;
       const refNumber = document.getElementById('refNumber').value;
-      const slipFile = document.getElementById('slipFile').files[0];
-      const timestamp = new Date().toISOString();
+      const file = document.getElementById('slipFile').files[0];
 
-      if (!slipFile) {
-        alert("กรุณาอัปโหลดสลิปก่อนส่งคำสั่งซื้อ");
+      if (!file) {
+        alert('กรุณาอัปโหลดสลิปก่อนส่งคำสั่งซื้อ');
         return;
       }
 
+      const timestamp = new Date().getTime();
+      const storageRef = ref(storage, `slips/${timestamp}_${file.name}`);
+      
       try {
-        // Upload slip to Firebase Storage
-        const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
-        await uploadBytes(storageRef, slipFile);
-        const slipURL = await getDownloadURL(storageRef);
+        await uploadBytes(storageRef, file);
+        const fileURL = await getDownloadURL(storageRef);
 
-        // Save order to Firestore
         await addDoc(collection(db, "orders"), {
           fullName,
           category,
           product,
           refNumber,
-          slipURL,
-          timestamp,
-          status: "รอตรวจสอบ"
+          slipURL: fileURL,
+          timestamp: new Date()
         });
 
+        document.getElementById('orderForm').reset();
         document.getElementById('orderSuccess').style.display = 'block';
-        this.reset();
-
-        // เล่นเสียงแจ้งเตือน "ติ๊ง!"
-        new Audio("https://freesound.org/data/previews/341/341695_5260877-lq.mp3").play();
-
-        alert("ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง");
-      } catch (error) {
-        console.error("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ:", error);
-        alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ กรุณาลองใหม่");
+        setTimeout(() => {
+          document.getElementById('orderSuccess').style.display = 'none';
+        }, 7000);
+      } catch (err) {
+        console.error("Error uploading order: ", err);
+        alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
       }
     });
   </script>
