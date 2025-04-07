@@ -320,7 +320,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
   <img src="IMG_0753.jpeg" alt="QR PromptPay" style="width: 200px; border-radius: 10px; box-shadow: 0 0 20px red;">
     <input type="file" id="slipFile" accept="image/*" required style="margin: 10px 0;"><br>
     <input type="text" id="refNumber" placeholder="กรอกเลขอ้างอิงจากสลิป" required style="width: 100%; padding: 8px;"><br><br>
-
     <button type="submit" style="padding: 10px 20px; background: red; color: white; border: none; font-family: 'Orbitron'; box-shadow: 0 0 10px red;">ยืนยันสั่งซื้อ</button>
   </form>
 </div>
@@ -397,7 +396,30 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     const storageRef = ref(storage, `slips/${timestamp}_${file.name}`);
     await uploadBytes(storageRef, file);
     const slipURL = await getDownloadURL(storageRef);
+const slipURL = await getDownloadURL(storageRef);
 
+    // เพิ่มข้อมูลลง Firestore
+    await addDoc(collection(db, "orders"), {
+      fullName,
+      category,
+      product,
+      refNumber,
+      slipURL,
+      timestamp
+    });
+
+    // แสดงข้อความสำเร็จและรีเซ็ตฟอร์ม
+    document.getElementById("orderSuccess").style.display = "block";
+    document.getElementById("orderForm").reset();
+
+    // scroll ไปยังข้อความแจ้งเตือน
+    document.getElementById("orderSuccess").scrollIntoView({ behavior: "smooth" });
+
+    // เสียงแจ้งเตือน
+    const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_4f4c84ff87.mp3?filename=notification-3-126507.mp3');
+    audio.play();
+
+  });
     await addDoc(collection(db, "orders"), {
       fullName,
       category,
