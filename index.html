@@ -357,6 +357,22 @@
 .hidden {
   display: none;
 }
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
+  text-shadow: 0 0 10px red;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  transform: scale(1.2);
+  color: white;
+  text-shadow: 0 0 15px red;
+}
   </style>
 </head>
 <body>
@@ -382,13 +398,9 @@
     <div class="status">ร้านเปิด <strong>24 ชม.</strong> | สถานะ: <span>● ออนไลน์</span> | แอดมิน: 1 คน</div>
       <p id="time-only"></p>
     <!-- ปุ่มสุ่ม -->
-<button id="dailyDrawBtn" class="draw-btn">
-  <img src="https://cdn-icons-png.flaticon.com/512/2983/2983810.png" width="24" />
-  สุ่มของประจำวัน
-</button>
-
 <!-- Popup แสดงผล -->
 <div id="popup" class="popup hidden">
+  <div class="close-btn" onclick="closePopup()">×</div>
   <img src="https://cdn-icons-png.flaticon.com/512/2920/2920054.png" width="100" />
   <h2>เสียใจด้วย!</h2>
   <p>คุณไม่ได้รับของรางวัลในวันนี้<br>สุ่มได้อีกครั้งใน:</p>
@@ -670,6 +682,13 @@ async function getIP() {
     console.error("IP Error", e);
     return "unknown";
   }
+}
+</script>
+<script>
+function closePopup() {
+  const popup = document.getElementById('popup');
+  popup.classList.add('hidden');
+  popup.style.display = 'none';
 }
 </script>
 </body>
