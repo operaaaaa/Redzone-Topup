@@ -338,47 +338,37 @@
 
   document.getElementById('category').addEventListener('change', function () {
     const productSelect = document.getElementById('product');
-    productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
+        productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
     const selected = this.value;
     if (products[selected]) {
       products[selected].forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        productSelect.appendChild(option);
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        productSelect.appendChild(opt);
       });
     }
   });
 
-  // Submit form
-  const orderForm = document.getElementById('orderForm');
-  const orderSuccess = document.getElementById('orderSuccess');
-  const button = orderForm.querySelector('button[type="submit"]');
-
-  const ding = new Audio("https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3"); // เสียงติ๊ง
-
-  orderForm.addEventListener('submit', async (e) => {
+  // Handle form submit
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    button.disabled = true;
-    button.innerHTML = 'กำลังส่ง...';
 
-    const fullName = document.getElementById('fullName').value.trim();
+    const fullName = document.getElementById('fullName').value;
     const category = document.getElementById('category').value;
     const product = document.getElementById('product').value;
-    const refNumber = document.getElementById('refNumber').value.trim();
-    const slipFile = document.getElementById('slipFile').files[0];
+    const refNumber = document.getElementById('refNumber').value;
+    const file = document.getElementById('slipFile').files[0];
 
-    if (!fullName || !category || !product || !refNumber || !slipFile) {
-      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-      button.disabled = false;
-      button.innerHTML = 'ยืนยันสั่งซื้อ';
+    if (!file) {
+      alert("กรุณาอัปโหลดสลิปก่อน");
       return;
     }
 
     try {
       const timestamp = Date.now();
-      const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
-      await uploadBytes(storageRef, slipFile);
+      const storageRef = ref(storage, `slips/${timestamp}_${file.name}`);
+      await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
 
       await addDoc(collection(db, "orders"), {
@@ -390,17 +380,18 @@
         createdAt: serverTimestamp()
       });
 
-      orderSuccess.style.display = 'block';
-      ding.play();
+      document.getElementById('orderForm').reset();
+      document.getElementById('orderSuccess').style.display = "block";
+      setTimeout(() => {
+        document.getElementById('orderSuccess').style.display = "none";
+      }, 5000);
 
-      // Reset form
-      orderForm.reset();
-      document.getElementById('product').innerHTML = '<option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>';
-    } catch (error) {
-      alert("เกิดข้อผิดพลาด: " + error.message);
-    } finally {
-      button.disabled = false;
-      button.innerHTML = 'ยืนยันสั่งซื้อ';
+      const audio = new Audio('https://notificationsounds.com/storage/sounds/file-sounds-1156-pristine.mp3');
+      audio.play();
+
+    } catch (err) {
+      console.error("Error uploading order:", err);
+      alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
     }
   });
 </script>
