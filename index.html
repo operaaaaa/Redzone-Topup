@@ -597,7 +597,30 @@
         document.getElementById('userIP').textContent = 'IP ของคุณ: ไม่สามารถโหลดได้';
       });
   });
-</script
+  <script>
+// รอให้ DOM โหลดเสร็จ
+document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("openPopupBtn");
+  const popup = document.getElementById("popup");
+  const closeBtn = document.getElementById("closePopupBtn");
+
+  // ตรวจสอบว่าปุ่มมีอยู่จริงก่อนค่อยใส่ Event
+  if (openBtn && popup && closeBtn) {
+    openBtn.addEventListener("click", () => {
+      popup.classList.add("active");
+      // จำลองรางวัลสุ่ม
+      const rewards = ["คูปอง 50 บาท", "โบนัส 10%", "สุ่มใหม่อีกครั้ง", "สกิน ROV", "แต้มสะสม 1 แต้ม"];
+      const random = rewards[Math.floor(Math.random() * rewards.length)];
+      document.getElementById("rewardText").textContent = random;
+    });
+
+    closeBtn.addEventListener("click", () => {
+      popup.classList.remove("active");
+    });
+  } else {
+    console.error("ไม่พบปุ่มสุ่มหรือ popup");
+  }
+});
 </script>
 <script>
   function updateTime() {
