@@ -1,50 +1,46 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-        <script src='Winwheel.js'></script>
+  <script src="Winwheel.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RedZone Topup</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-
-  input, select, textarea {
-  background: #111;
-  border: 1px solid #ff4c4c;
-  border-radius: 5px;
-  color: #fff;
-  padding: 10px;
-  font-size: 1rem;
-  font-family: 'Rajdhani', 'Orbitron', sans-serif;
-  box-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
-  transition: 0.2s ease-in-out;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  box-shadow: 0 0 10px #ff4c4c;
-  border-color: #ff4c4c;
-}
-
-button[type="submit"] {
-  background-color: #ff1a1a;
-  color: white;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.1rem;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
-  transition: 0.3s ease;
-}
-
-button[type="submit"]:hover {
-  background: #ff4c4c;
-  box-shadow: 0 0 15px red;
-  cursor: pointer;
-  transform: scale(1.05);
-}
+    input, select, textarea {
+      background: #111;
+      border: 1px solid #ff4c4c;
+      border-radius: 5px;
+      color: #fff;
+      padding: 10px;
+      font-size: 1rem;
+      font-family: 'Rajdhani', 'Orbitron', sans-serif;
+      box-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
+      transition: 0.2s ease-in-out;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 10px #ff4c4c;
+      border-color: #ff4c4c;
+    }
+    button[type="submit"] {
+      background-color: #ff1a1a;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+      transition: 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background: #ff4c4c;
+      box-shadow: 0 0 15px red;
+      cursor: pointer;
+      transform: scale(1.05);
+    }
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -56,12 +52,10 @@ button[type="submit"]:hover {
       min-height: 100vh;
       position: relative;
     }
-
     @keyframes pulseGlow {
       0%, 100% { box-shadow: 0 0 20px red; }
       50% { box-shadow: 0 0 40px #ff4c4c; }
     }
-
     body::before {
       content: "";
       position: fixed;
@@ -77,19 +71,16 @@ button[type="submit"]:hover {
         0 0 60px rgba(255, 50, 50, 0.3),
         0 0 90px rgba(255, 0, 0, 0.25);
     }
-
     @keyframes fireGlow {
       0%, 100% { filter: blur(6px) brightness(1.5); opacity: 0.7; }
       50% { filter: blur(8px) brightness(2); opacity: 1; }
     }
-
     .container {
       width: 100%;
       max-width: 720px;
       margin: auto;
       padding: 15px;
     }
-
     .logo {
       width: 30%;
       max-width: 120px;
@@ -98,30 +89,25 @@ button[type="submit"]:hover {
       margin: 20px auto 10px;
       display: block;
     }
-
     .title {
       font-size: 2rem;
       color: #ff4c4c;
       text-shadow: 0 0 15px white;
       margin-bottom: 10px;
     }
-
     .status {
       font-size: 0.9rem;
       color: #ddd;
       margin-bottom: 20px;
     }
-
     .status span {
       color: #00ff00;
       animation: blink 1s infinite;
     }
-
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
-
     .section {
       background: #1c1c1c;
       border: 2px solid #ff4c4c;
@@ -130,14 +116,12 @@ button[type="submit"]:hover {
       margin: 20px auto;
       box-shadow: 0 0 25px #ff000088;
     }
-
     .section h3 {
       font-size: 1.5rem;
       color: #fff;
       text-shadow: 0 0 10px red, 0 0 20px white;
       margin-bottom: 25px;
     }
-
     .product-box {
       background: #111;
       border-radius: 12px;
@@ -146,7 +130,6 @@ button[type="submit"]:hover {
       overflow: hidden;
       transition: 0.3s ease;
     }
-
     .product-header {
       padding: 15px;
       background: #1c1c1c;
@@ -155,10 +138,8 @@ button[type="submit"]:hover {
       text-align: left;
       cursor: pointer;
       position: relative;
-text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
-}
+      text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     }
-
     .product-header::after {
       content: '+';
       position: absolute;
@@ -166,11 +147,9 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       font-size: 1.3rem;
       transition: transform 0.2s ease;
     }
-
     .product-box.active .product-header::after {
       transform: rotate(45deg);
     }
-
     .product-details {
       max-height: 0;
       overflow: hidden;
@@ -179,25 +158,21 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       padding: 0 15px;
       text-align: left;
     }
-
     .product-box.active .product-details {
       padding: 10px 15px 15px;
       max-height: 500px;
     }
-
     .product-details p {
       margin: 6px 0;
       font-size: 0.95rem;
       color: #ccc;
     }
-
     .insta {
       margin-top: 30px;
       cursor: pointer;
       filter: drop-shadow(0 0 6px white);
       width: 40px;
     }
-
     @media (max-width: 480px) {
       .title { font-size: 1.7rem; }
       .status { font-size: 0.8rem; }
@@ -205,44 +180,41 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       .product-details p { font-size: 0.85rem; }
     }
     .ad-popup {
-  display: none; /* Initially hide the popup */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-}
-
-.ad-popup-content {
-  background: #222;
-  padding: 30px;
-  border-radius: 10px;
-  text-align: center;
-  color: #fff;
-  width: 80%;
-  max-width: 500px;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-}
-
-.ad-popup h2 {
-  color: #ff4c4c;
-  margin-bottom: 15px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 40px;
-  color: #fff;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .ad-popup-content {
+      background: #222;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    }
+    .ad-popup h2 {
+      color: #ff4c4c;
+      margin-bottom: 15px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 40px;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
   </style>
 </head>
 <body>
@@ -255,7 +227,7 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
     <h4>@redzone_topup</h4>
     <div class="section">
       <h3>รายการสินค้า</h3>
-      <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด<h5>
+      <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด</h5>
       <div class="product-box">
         <div class="product-header">RoV (Garena คูปอง)</div>
         <div class="product-details">
@@ -266,7 +238,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
           <p>• 1,000฿ → ~1,200 คูปอง</p>
         </div>
       </div>
-
       <div class="product-box">
         <div class="product-header">Minecraft</div>
         <div class="product-details">
@@ -275,7 +246,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
           <p>• Minecoins 3,500: ~587฿</p>
         </div>
       </div>
-
       <div class="product-box">
         <div class="product-header">Roblox</div>
         <div class="product-details">
@@ -285,7 +255,6 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
           <p>• Premium เริ่มที่ ~179฿/เดือน</p>
         </div>
       </div>
-
       <div class="product-box">
         <div class="product-header">TrueMoney Wallet</div>
         <div class="product-details">
@@ -295,146 +264,134 @@ text-shadow: 0 0 2px rgba(255, 76, 76, 0.5), 0 0 4px rgba(255,255,255,0.2);
       </div>
     </div>
     <div class="section">
-  <h3 style="color:#fff; text-shadow:0 0 6px red; margin-bottom: 20px;">ระบบสั่งซื้อสินค้า</h3>
-
-  <form id="orderForm">
-    <label>ชื่อจริง - นามสกุล:</label><br>
-    <input type="text" id="fullName" required style="width: 100%; padding: 8px; margin: 10px 0;"><br>
-
-    <label>เลือกหัวข้อสินค้า:</label><br>
-    <select id="category" required style="width: 100%; padding: 8px; margin: 10px 0;">
-      <option value="">-- กรุณาเลือก --</option>
-      <option value="RoV">RoV</option>
-      <option value="Minecraft">Minecraft</option>
-      <option value="Roblox">Roblox</option>
-      <option value="TrueMoney Wallet">TrueMoney Wallet</option>
-    </select><br>
-
-    <label>เลือกรายการสินค้า:</label><br>
-    <select id="product" required style="width: 100%; padding: 8px; margin: 10px 0;">
-      <option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>
-    </select><br>
-
-    <label>อัปโหลดสลิปพร้อมกรอกเลขอ้างอิง (หลังโอน):</label><br>
-       <h3 style="color:#fff; text-shadow:0 0 6px red;">โอนเงินผ่าน PromptPay</h3>
-  <img src="IMG_0753.jpeg" alt="QR PromptPay" style="width: 200px; border-radius: 10px; box-shadow: 0 0 20px red;">
-    <input type="file" id="slipFile" accept="image/*" required style="margin: 10px 0;"><br>
-    <input type="text" id="refNumber" placeholder="กรอกเลขอ้างอิงจากสลิป" required style="width: 100%; padding: 8px;"><br><br>
-    <button type="submit" style="padding: 10px 20px; background: red; color: white; border: none; font-family: 'Orbitron'; box-shadow: 0 0 10px red;">ยืนยันสั่งซื้อ</button>
-  </form>
-</div>
-
-</div>
+      <h3 style="color:#fff; text-shadow:0 0 6px red; margin-bottom: 20px;">ระบบสั่งซื้อสินค้า</h3>
+      <form id="orderForm">
+        <label>ชื่อจริง - นามสกุล:</label><br>
+        <input type="text" id="fullName" required style="width: 100%; padding: 8px; margin: 10px 0;"><br>
+        <label>เลือกหัวข้อสินค้า:</label><br>
+        <select id="category" required style="width: 100%; padding: 8px; margin: 10px 0;">
+          <option value="">-- กรุณาเลือก --</option>
+          <option value="RoV">RoV</option>
+          <option value="Minecraft">Minecraft</option>
+          <option value="Roblox">Roblox</option>
+          <option value="TrueMoney Wallet">TrueMoney Wallet</option>
+        </select><br>
+        <label>เลือกรายการสินค้า:</label><br>
+        <select id="product" required style="width: 100%; padding: 8px; margin: 10px 0;">
+          <option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>
+        </select><br>
+        <label>อัปโหลดสลิปพร้อมกรอกเลขอ้างอิง (หลังโอน):</label><br>
+        <h3 style="color:#fff; text-shadow:0 0 6px red;">โอนเงินผ่าน PromptPay</h3>
+        <img src="IMG_0753.jpeg" alt="QR PromptPay" style="width: 200px; border-radius: 10px; box-shadow: 0 0 20px red;">
+        <input type="file" id="slipFile" accept="image/*" required style="margin: 10px 0;"><br>
+        <input type="text" id="refNumber" placeholder="กรอกเลขอ้างอิงจากสลิป" required style="width: 100%; padding: 8px;"><br><br>
+        <button type="submit" style="padding: 10px 20px; background: red; color: white; border: none; font-family: 'Orbitron'; box-shadow: 0 0 10px red;">ยืนยันสั่งซื้อ</button>
+      </form>
+    </div>
+  </div>
   <div class="receipt-section">
-    <div id="orderSuccess" style="display:none; margin-top:15px; color:lightgreen;">ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง</div>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    <div id="orderSuccess" style="display:none; margin-top:15px; color:lightgreen;">
+      ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-    authDomain: "redzone-topup-852a2.firebaseapp.com",
-    projectId: "redzone-topup-852a2",
-    storageBucket: "redzone-topup-852a2.appspot.com",
-    messagingSenderId: "209606560486",
-    appId: "1:209606560486:web:d12baa8545d99adad14927",
-    measurementId: "G-T1WWTKDY79"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+      authDomain: "redzone-topup-852a2.firebaseapp.com",
+      projectId: "redzone-topup-852a2",
+      storageBucket: "redzone-topup-852a2.appspot.com",
+      messagingSenderId: "209606560486",
+      appId: "1:209606560486:web:d12baa8545d99adad14927",
+      measurementId: "G-T1WWTKDY79"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const storage = getStorage(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
 
-  // Accordion toggle
-  document.querySelectorAll('.product-box').forEach(box => {
-    box.querySelector('.product-header').addEventListener('click', () => {
-      box.classList.toggle('active');
-    });
-  });
-
-  // Dynamic product options
-  const products = {
-    "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
-    "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
-    "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
-    "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
-  };
-
-  document.getElementById('category').addEventListener('change', function () {
-    const productSelect = document.getElementById('product');
-    productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
-    const selected = this.value;
-    if (products[selected]) {
-      products[selected].forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        productSelect.appendChild(option);
+    // Accordion toggle
+    document.querySelectorAll('.product-box').forEach(box => {
+      box.querySelector('.product-header').addEventListener('click', () => {
+        box.classList.toggle('active');
       });
-    }
-  });
-
-  // Order form
-  document.getElementById('orderForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const fullName = document.getElementById('fullName').value;
-    const category = document.getElementById('category').value;
-    const product = document.getElementById('product').value;
-    const refNumber = document.getElementById('refNumber').value;
-    const file = document.getElementById('slipFile').files[0];
-
-    if (!file) return alert("กรุณาอัปโหลดสลิป");
-
-    const timestamp = new Date().toISOString();
-    const storageRef = ref(storage, `slips/${timestamp}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    const slipURL = await getDownloadURL(storageRef);
-const slipURL = await getDownloadURL(storageRef);
-
-    // เพิ่มข้อมูลลง Firestore
-    await addDoc(collection(db, "orders"), {
-      fullName,
-      category,
-      product,
-      refNumber,
-      slipURL,
-      timestamp
     });
 
-    // แสดงข้อความสำเร็จและรีเซ็ตฟอร์ม
-    document.getElementById("orderSuccess").style.display = "block";
-    document.getElementById("orderForm").reset();
+    // Dynamic product options
+    const products = {
+      "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
+      "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
+      "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
+      "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
+    };
 
-    // scroll ไปยังข้อความแจ้งเตือน
-    document.getElementById("orderSuccess").scrollIntoView({ behavior: "smooth" });
-
-    // เสียงแจ้งเตือน
-    const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_4f4c84ff87.mp3?filename=notification-3-126507.mp3');
-    audio.play();
-
-  });
-    await addDoc(collection(db, "orders"), {
-      fullName,
-      category,
-      product,
-      refNumber,
-      slipURL,
-      timestamp,
-      status: "รอตรวจสอบ"
+    document.getElementById('category').addEventListener('change', function () {
+      const productSelect = document.getElementById('product');
+      productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
+      const selected = this.value;
+      if (products[selected]) {
+        products[selected].forEach(item => {
+          const option = document.createElement('option');
+          option.value = item;
+          option.textContent = item;
+          productSelect.appendChild(option);
+        });
+      }
     });
 
-    document.getElementById('orderForm').reset();
-    document.getElementById('orderSuccess').style.display = 'block';
-  });
-// Function to show the ad popup when the page loads
+    // Order form
+    document.getElementById('orderForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-</script>
+      const fullName = document.getElementById('fullName').value;
+      const category = document.getElementById('category').value;
+      const product = document.getElementById('product').value;
+      const refNumber = document.getElementById('refNumber').value;
+      const slipFile = document.getElementById('slipFile').files[0];
+      const timestamp = new Date().toISOString();
+
+      if (!slipFile) {
+        alert("กรุณาอัปโหลดสลิปก่อนส่งคำสั่งซื้อ");
+        return;
+      }
+
+      try {
+        // Upload slip to Firebase Storage
+        const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
+        await uploadBytes(storageRef, slipFile);
+        const slipURL = await getDownloadURL(storageRef);
+
+        // Save order to Firestore
+        await addDoc(collection(db, "orders"), {
+          fullName,
+          category,
+          product,
+          refNumber,
+          slipURL,
+          timestamp,
+          status: "รอตรวจสอบ"
+        });
+
+        document.getElementById('orderSuccess').style.display = 'block';
+        this.reset();
+
+        // เล่นเสียงแจ้งเตือน "ติ๊ง!"
+        new Audio("https://freesound.org/data/previews/341/341695_5260877-lq.mp3").play();
+
+        alert("ส่งคำสั่งซื้อสำเร็จ รอตรวจสอบภายใน 3 ชั่วโมง");
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ:", error);
+        alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ กรุณาลองใหม่");
+      }
+    });
+  </script>
 </body>
-</html> 
+</html>
