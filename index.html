@@ -238,7 +238,6 @@
 <body>
 <div id="client-info-box">
   <p id="datetime"></p>
-  <p id="ipaddress">IP: Loading...</p>
 </div>
 </div>
   <!-- Advertisement Popup -->
@@ -432,16 +431,6 @@ setInterval(updateDateTime, 1000);
 updateDateTime();
 
 // แสดงชื่อเครื่อง (User Agent)
-
-// ดึง IP Address
-fetch('https://api.ipify.org?format=json')
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('ipaddress').textContent = 'IP: ' + data.ip;
-  })
-  .catch(err => {
-    document.getElementById('ipaddress').textContent = 'IP: ไม่สามารถโหลดได้';
-  });
 </script>
 </body>
 </html>
