@@ -336,11 +336,7 @@
       <p id="time-only"></p>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <h4>@redzone_topup</h4>
-    <div id="daily-reward-box" class="glow-box">
-  <h2>สุ่มของประจำวัน</h2>
-  <button id="claim-reward-btn">สุ่มเลย!</button>
-  <p id="reward-result" style="margin-top: 10px;"></p>
-</div>
+<button id="daily-lucky-btn" class="glow-button">สุ่มของรางวัลประจำวัน</button>
     <div class="section">
       <h3>รายการสินค้า</h3>
       <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด</h5>
@@ -530,7 +526,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import {
-  getFirestore, collection, doc, setDoc, getDoc, serverTimestamp
+  getFirestore, doc, getDoc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -545,24 +541,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// ฟังก์ชันดึง IP
 async function getUserIP() {
-  const res = await fetch("https://api.ipify.org?format=json");
-  const data = await res.json();
-  return data.ip;
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    return data.ip;
+  } catch (error) {
+    console.error("ไม่สามารถดึง IP ได้", error);
+    return null;
+  }
 }
 
-document.getElementById("daily-lucky-btn").addEventListener("click", async () => {
+// ฟังก์ชันสุ่มของ
+async function handleDailyLuckyDraw() {
   const ip = await getUserIP();
+  if (!ip) {
+    alert("ไม่สามารถดึง IP ได้ กรุณาลองใหม่");
+    return;
+  }
+
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   const docRef = doc(db, "dailyLuck", ip);
 
   const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    const lastDate = docSnap.data().date;
-    if (lastDate === today) {
-      alert("คุณใช้สิทธิ์สุ่มของวันนี้ไปแล้ว ลองใหม่พรุ่งนี้นะ!");
-      return;
-    }
+  if (docSnap.exists() && docSnap.data().date === today) {
+    alert("คุณใช้สิทธิ์สุ่มของวันนี้ไปแล้ว ลองใหม่พรุ่งนี้นะ!");
+    return;
   }
 
   await setDoc(docRef, {
@@ -572,7 +577,10 @@ document.getElementById("daily-lucky-btn").addEventListener("click", async () =>
   });
 
   alert("คุณไม่ได้รับของรางวัลในวันนี้ ไว้ลองใหม่พรุ่งนี้นะ!");
-});
+}
+
+// เชื่อมปุ่มกับฟังก์ชัน
+document.getElementById("daily-lucky-btn").addEventListener("click", handleDailyLuckyDraw);
 </script>
 <script>
   let percent = 0;
