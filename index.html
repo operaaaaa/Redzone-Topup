@@ -215,23 +215,32 @@
       background: none;
       border: none;
     }
-    #client-info-box {
+#client-info-box {
   position: fixed;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 0, 0, 0.1);
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 12px 16px;
   border: 1px solid red;
-  border-radius: 10px;
-  padding: 10px 15px;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 0 15px red;
   color: white;
   font-family: 'Orbitron', sans-serif;
-  font-size: 12px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 0 10px red;
   z-index: 9999;
+  animation: fadeInRight 0.8s ease-in-out;
 }
-#client-info-box p {
-  margin: 2px 0;
+
+/* แอนิเมชันเลื่อนขวา */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
 }
   </style>
 </head>
