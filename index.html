@@ -300,97 +300,109 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-      authDomain: "redzone-topup-852a2.firebaseapp.com",
-      projectId: "redzone-topup-852a2",
-      storageBucket: "redzone-topup-852a2.appspot.com",
-      messagingSenderId: "209606560486",
-      appId: "1:209606560486:web:d12baa8545d99adad14927",
-      measurementId: "G-T1WWTKDY79"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+    authDomain: "redzone-topup-852a2.firebaseapp.com",
+    projectId: "redzone-topup-852a2",
+    storageBucket: "redzone-topup-852a2.appspot.com",
+    messagingSenderId: "209606560486",
+    appId: "1:209606560486:web:d12baa8545d99adad14927",
+    measurementId: "G-T1WWTKDY79"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const storage = getStorage(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const storage = getStorage(app);
+  const db = getFirestore(app);
 
-    // Accordion toggle
-    document.querySelectorAll('.product-box').forEach(box => {
-      box.querySelector('.product-header').addEventListener('click', () => {
-        box.classList.toggle('active');
+  // Accordion toggle
+  document.querySelectorAll('.product-box').forEach(box => {
+    box.querySelector('.product-header').addEventListener('click', () => {
+      box.classList.toggle('active');
+    });
+  });
+
+  // Dynamic dropdown
+  const products = {
+    "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
+    "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
+    "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
+    "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
+  };
+
+  document.getElementById('category').addEventListener('change', function () {
+    const productSelect = document.getElementById('product');
+    productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
+    const selected = this.value;
+    if (products[selected]) {
+      products[selected].forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        productSelect.appendChild(option);
       });
-    });
+    }
+  });
 
-    // Dynamic product options
-    const products = {
-      "RoV": ["50฿ → 51 คูปอง", "90฿ → 96 คูปอง", "150฿ → 160 คูปอง", "300฿ → 325 คูปอง", "1,000฿ → ~1,200 คูปอง"],
-      "Minecraft": ["Java / Bedrock ~580฿", "Minecoins 1,720: ~296฿", "Minecoins 3,500: ~587฿"],
-      "Roblox": ["400 Robux: ~179฿", "800 Robux: ~359฿", "1,700 Robux: ~719฿", "Premium เริ่มที่ ~179฿/เดือน"],
-      "TrueMoney Wallet": ["เติมตามยอด 50฿", "เติมตามยอด 100฿", "เติมตามยอด 500฿"]
-    };
+  // Submit form
+  const orderForm = document.getElementById('orderForm');
+  const orderSuccess = document.getElementById('orderSuccess');
+  const button = orderForm.querySelector('button[type="submit"]');
 
-    document.getElementById('category').addEventListener('change', function () {
-      const productSelect = document.getElementById('product');
-      productSelect.innerHTML = '<option value="">-- กรุณาเลือก --</option>';
-      const selected = this.value;
-      if (products[selected]) {
-        products[selected].forEach(item => {
-          const option = document.createElement('option');
-          option.value = item;
-          option.textContent = item;
-          productSelect.appendChild(option);
-        });
-      }
-    });
+  const ding = new Audio("https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3"); // เสียงติ๊ง
 
-    // Handle form submission
-    document.getElementById('orderForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+  orderForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    button.disabled = true;
+    button.innerHTML = 'กำลังส่ง...';
 
-      const fullName = document.getElementById('fullName').value;
-      const category = document.getElementById('category').value;
-      const product = document.getElementById('product').value;
-      const refNumber = document.getElementById('refNumber').value;
-      const file = document.getElementById('slipFile').files[0];
+    const fullName = document.getElementById('fullName').value.trim();
+    const category = document.getElementById('category').value;
+    const product = document.getElementById('product').value;
+    const refNumber = document.getElementById('refNumber').value.trim();
+    const slipFile = document.getElementById('slipFile').files[0];
 
-      if (!file) {
-        alert('กรุณาอัปโหลดสลิปก่อนส่งคำสั่งซื้อ');
-        return;
-      }
+    if (!fullName || !category || !product || !refNumber || !slipFile) {
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      button.disabled = false;
+      button.innerHTML = 'ยืนยันสั่งซื้อ';
+      return;
+    }
 
-      const timestamp = new Date().getTime();
-      const storageRef = ref(storage, `slips/${timestamp}_${file.name}`);
-      
-      try {
-        await uploadBytes(storageRef, file);
-        const fileURL = await getDownloadURL(storageRef);
+    try {
+      const timestamp = Date.now();
+      const storageRef = ref(storage, `slips/${timestamp}_${slipFile.name}`);
+      await uploadBytes(storageRef, slipFile);
+      const downloadURL = await getDownloadURL(storageRef);
 
-        await addDoc(collection(db, "orders"), {
-          fullName,
-          category,
-          product,
-          refNumber,
-          slipURL: fileURL,
-          timestamp: new Date()
-        });
+      await addDoc(collection(db, "orders"), {
+        fullName,
+        category,
+        product,
+        refNumber,
+        slipURL: downloadURL,
+        createdAt: serverTimestamp()
+      });
 
-        document.getElementById('orderForm').reset();
-        document.getElementById('orderSuccess').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('orderSuccess').style.display = 'none';
-        }, 7000);
-      } catch (err) {
-        console.error("Error uploading order: ", err);
-        alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
-      }
-    });
-  </script>
+      orderSuccess.style.display = 'block';
+      ding.play();
+
+      // Reset form
+      orderForm.reset();
+      document.getElementById('product').innerHTML = '<option value="">-- กรุณาเลือกหมวดหมู่ก่อน --</option>';
+    } catch (error) {
+      alert("เกิดข้อผิดพลาด: " + error.message);
+    } finally {
+      button.disabled = false;
+      button.innerHTML = 'ยืนยันสั่งซื้อ';
+    }
+  });
+</script>
 </body>
 </html>
