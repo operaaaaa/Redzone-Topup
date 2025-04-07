@@ -288,6 +288,31 @@
   background: red;
   transition: width 0.05s ease;
 }
+#daily-reward-box {
+  margin-top: 40px;
+  padding: 20px;
+  border: 2px solid red;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 0 20px red;
+}
+
+#claim-reward-btn {
+  font-family: 'Orbitron';
+  background-color: black;
+  color: red;
+  border: 2px solid red;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+#claim-reward-btn:hover {
+  background-color: red;
+  color: black;
+}
   </style>
 </head>
 <body>
@@ -310,6 +335,11 @@
       <p id="time-only"></p>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <h4>@redzone_topup</h4>
+    <div id="daily-reward-box" class="glow-box">
+  <h2>สุ่มของประจำวัน</h2>
+  <button id="claim-reward-btn">สุ่มเลย!</button>
+  <p id="reward-result" style="margin-top: 10px;"></p>
+</div>
     <div class="section">
       <h3>รายการสินค้า</h3>
       <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด</h5>
@@ -496,6 +526,49 @@
 
   setInterval(updateTime, 1000);
   updateTime(); // เรียกทันทีตอนโหลด
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, Timestamp
+} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+// Firebase config ของคุณ
+const firebaseConfig = {
+  apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+  authDomain: "redzone-topup-852a2.firebaseapp.com",
+  projectId: "redzone-topup-852a2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// List ของรางวัลที่สุ่มได้
+const rewards = ["เพชร 5 เม็ด", "บัตรเงินสด 20 บาท", "สุ่มใหม่พรุ่งนี้!", "แต้ม 10 แต้ม", "ไอเทมลับ 1 ชิ้น"];
+
+document.getElementById('claim-reward-btn').addEventListener('click', async () => {
+  const ip = await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
+  const docRef = doc(db, "daily_rewards", ip);
+  const docSnap = await getDoc(docRef);
+  const now = new Date();
+
+  if (docSnap.exists()) {
+    const lastClaim = docSnap.data().lastClaim.toDate();
+    const isSameDay = lastClaim.toDateString() === now.toDateString();
+    if (isSameDay) {
+      document.getElementById('reward-result').textContent = `วันนี้คุณสุ่มแล้ว: ${docSnap.data().reward} (กลับมาใหม่พรุ่งนี้นะ!)`;
+      return;
+    }
+  }
+
+  // สุ่มของรางวัล
+  const reward = rewards[Math.floor(Math.random() * rewards.length)];
+
+  await setDoc(docRef, {
+    lastClaim: Timestamp.now(),
+    reward: reward
+  });
+
+  document.getElementById('reward-result').textContent = `คุณได้รับ: ${reward}`;
+});
 </script>
 <script>
   let percent = 0;
