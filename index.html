@@ -288,80 +288,6 @@
   background: red;
   transition: width 0.05s ease;
 }
-#daily-reward-box {
-  margin: 40px auto;
-  padding: 20px;
-  width: 300px;
-  border: 2px solid red;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 0 20px red;
-  background: rgba(0,0,0,0.7);
-}
-
-#claim-reward-btn {
-  font-family: 'Orbitron', sans-serif;
-  background-color: black;
-  color: red;
-  border: 2px solid red;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.2s ease;
-}
-
-#claim-reward-btn:hover {
-  background-color: red;
-  color: black;
-}
-.popup-box {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.popup-content {
-  background: #111;
-  border: 2px solid red;
-  padding: 30px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px red;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  text-align: center;
-  animation: fadeIn 0.3s ease;
-}
-
-.popup-content button {
-  margin-top: 20px;
-  padding: 8px 16px;
-  font-family: 'Orbitron', sans-serif;
-  background: red;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.2s;
-}
-
-.popup-content button:hover {
-  background: #ff4444;
-}
-
-.hidden {
-  display: none;
-}
-
-@keyframes fadeIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
   </style>
 </head>
 <body>
@@ -384,7 +310,6 @@
       <p id="time-only"></p>
     <img class="insta" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <h4>@redzone_topup</h4>
-<button id="daily-lucky-btn" class="glow-button">สุ่มของรางวัลประจำวัน</button>
     <div class="section">
       <h3>รายการสินค้า</h3>
       <h5>กดเลือกรายการสินค้าเพื่อดูรายละเอียด</h5>
@@ -572,63 +497,6 @@
   setInterval(updateTime, 1000);
   updateTime(); // เรียกทันทีตอนโหลด
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import {
-  getFirestore, doc, getDoc, setDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
-  authDomain: "redzone-topup-852a2.firebaseapp.com",
-  projectId: "redzone-topup-852a2",
-  storageBucket: "redzone-topup-852a2.appspot.com",
-  messagingSenderId: "332775681015",
-  appId: "1:332775681015:web:a7b97c9f9d172b1a3d5d69"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ฟังก์ชันดึง IP
-async function getUserIP() {
-  try {
-    const res = await fetch("https://api.ipify.org?format=json");
-    const data = await res.json();
-    return data.ip;
-  } catch (error) {
-    console.error("ไม่สามารถดึง IP ได้", error);
-    return null;
-  }
-}
-
-// ฟังก์ชันสุ่มของ
-async function handleDailyLuckyDraw() {
-  const ip = await getUserIP();
-  if (!ip) {
-    alert("ไม่สามารถดึง IP ได้ กรุณาลองใหม่");
-    return;
-  }
-
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  const docRef = doc(db, "dailyLuck", ip);
-
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists() && docSnap.data().date === today) {
-    alert("คุณใช้สิทธิ์สุ่มของวันนี้ไปแล้ว ลองใหม่พรุ่งนี้นะ!");
-    return;
-  }
-
-  await setDoc(docRef, {
-    ip: ip,
-    date: today,
-    time: serverTimestamp()
-  });
-
-  alert("คุณไม่ได้รับของรางวัลในวันนี้ ไว้ลองใหม่พรุ่งนี้นะ!");
-}
-
-// เชื่อมปุ่มกับฟังก์ชัน
-document.getElementById("daily-lucky-btn").addEventListener("click", handleDailyLuckyDraw);
 </script>
 <script>
   let percent = 0;
@@ -650,12 +518,5 @@ document.getElementById("daily-lucky-btn").addEventListener("click", handleDaily
     }
   }, 40); // ปรับความเร็วได้
 </script>
-<div id="popup-box" class="popup-box hidden">
-  <div class="popup-content">
-    <p id="popup-message">ข้อความจากระบบ</p>
-    <button id="popup-close">ปิด</button>
-  </div>
-</div>
-</body>
 </body>
 </html>
