@@ -288,6 +288,23 @@
   background: red;
   transition: width 0.05s ease;
 }
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid red;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+}
+
+.logop {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 5px red);
+}
   </style>
 </head>
 <body>
@@ -303,6 +320,10 @@
 <p>📞09-1871-5814</p>
 </div>
   <!-- Advertisement Popup -->
+  <div class="top-bar">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Default_pfp.svg" alt="โลโก้" class="logop">
+  <span class="user-ip" id="userIP">IP ของคุณ: กำลังโหลด...</span>
+</div>
   <div class="container">
     <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" class="logo" onclick="window.open('https://www.instagram.com/redzone_topup', '_blank')" />
     <div class="title">RedZone Topup</div>
@@ -477,6 +498,15 @@
       console.error("Error submitting order: ", err);
       alert("เกิดข้อผิดพลาดในการส่งคำสั่งซื้อ");
     }
+  });
+  fetch('https://api.ipify.org?format=json')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('userIP').textContent = `IP ของคุณ: ${data.ip}`;
+    document.getElementById('name')?.value = data.ip; // ใส่ชื่อ IP ในฟอร์มถ้ามี input#name
+  })
+  .catch(() => {
+    document.getElementById('userIP').textContent = 'IP ของคุณ: ไม่สามารถโหลดได้';
   });
 </script>
 <script>
