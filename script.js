@@ -102,3 +102,41 @@ function spinWheel() {
 
 drawWheel();
 document.getElementById("spin").addEventListener("click", spinWheel);
+
+function showCountdownToNextMonth() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  // วันที่ 1 เดือนถัดไป เวลา 00:00
+  const nextMonth = new Date(year, month + 1, 1, 0, 0, 0);
+
+  const countdownEl = document.getElementById("countdown");
+
+  const updateCountdown = () => {
+    const now = new Date();
+    const diff = nextMonth - now;
+
+    if (diff <= 0) {
+      countdownEl.textContent = "";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownEl.textContent = `หมุนได้อีกครั้งใน ${days} วัน ${hours} ชม. ${minutes} นาที`;
+  };
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+if (hasSpunThisMonth) {
+  resultEl.textContent = "คุณสุ่มไปแล้วในเดือนนี้";
+  showCountdownToNextMonth();
+  return;
+}
+
+
