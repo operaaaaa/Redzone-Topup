@@ -127,3 +127,56 @@ h1 {
   height: 30px;
   filter: drop-shadow(0 0 5px #ff3b3b);
 }
+@media screen and (max-width: 600px) {
+  .wheel-container canvas {
+    width: 90vw;
+    height: 90vw;
+  }
+
+  .form-section {
+    flex-direction: column;
+  }
+
+  #username {
+    width: 80vw;
+    font-size: 14px;
+  }
+
+  #spin {
+    width: 60vw;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .winner-section {
+    width: 90vw;
+    font-size: 14px;
+  }
+
+  .ig-contact {
+    font-size: 14px;
+  }
+
+  .ig-contact img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo {
+    width: 140px;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  #result {
+    font-size: 16px;
+  }
+}
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
