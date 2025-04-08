@@ -2,6 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>สมัครสมาชิก | RedZone TopUp</title>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -18,78 +19,65 @@
 
     .logo-container {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 10px;
+      right: 10px;
       text-align: right;
+      z-index: 10;
     }
 
     .logo-container img {
-      height: 60px;
-      margin-bottom: 5px;
+      height: 50px;
     }
 
     .status-online {
-      display: inline-block;
       background: #4caf50;
       color: white;
-      font-size: 13px;
-      padding: 3px 10px;
+      font-size: 12px;
+      padding: 2px 8px;
       border-radius: 20px;
+      margin-top: 4px;
     }
 
     .container {
-      max-width: 480px;
-      margin: 80px auto 50px auto;
+      max-width: 95%;
+      margin: 100px auto 30px auto;
       background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    h2 {
+    h2, .brand-title {
       text-align: center;
-      margin-bottom: 20px;
-      color: #1e3c72;
+      color: #e53935;
     }
 
     input, select, button {
       width: 100%;
-      padding: 12px 15px;
+      padding: 14px;
       margin-top: 12px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
-      box-sizing: border-box;
     }
 
     button {
       background-color: #e53935;
       color: white;
       font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #b71c1c;
     }
 
     .vip-warning {
-      color: #d32f2f;
-      margin-top: 10px;
-      font-weight: bold;
       display: none;
+      color: #d32f2f;
+      font-size: 14px;
+      margin-top: 8px;
     }
 
     #message {
       margin-top: 20px;
-      text-align: center;
       font-size: 16px;
-    }
-
-    #message h3 {
-      color: #e53935;
-      margin: 10px 0;
+      text-align: center;
     }
 
     a {
@@ -100,21 +88,12 @@
     a:hover {
       text-decoration: underline;
     }
-
-    .brand-title {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 5px;
-      color: #e53935;
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
 
-<!-- โลโก้ร้าน + สถานะออนไลน์ -->
 <div class="logo-container">
-  <img src="9D779D83-727F-4EE4-B165-BBA9DF15A439.png" alt="RedZone Logo" />
+  <img src="logo.png" alt="RedZone Logo" />
   <div class="status-online">● ออนไลน์</div>
 </div>
 
@@ -123,11 +102,11 @@
   <h2>สมัครสมาชิก</h2>
 
   <form id="registerForm">
-    <input type="text" id="fullname" placeholder="ชื่อ-นามสกุล" required />
-    <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์" required />
-    <input type="email" id="email" placeholder="อีเมล" required />
-    <input type="text" id="username" placeholder="ชื่อผู้ใช้" required />
-    <input type="password" id="password" placeholder="รหัสผ่าน" required />
+    <input type="text" id="fullname" placeholder="ชื่อ-นามสกุล" required>
+    <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์" required>
+    <input type="email" id="email" placeholder="อีเมล" required>
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้" required>
+    <input type="password" id="password" placeholder="รหัสผ่าน" required>
 
     <select id="memberType" required>
       <option value="">-- เลือกประเภทสมาชิก --</option>
@@ -136,7 +115,8 @@
     </select>
 
     <div id="vipWarning" class="vip-warning">
-      * คุณเลือกเป็นสมาชิก VIP กรุณาติดต่อแอดมินผ่าน Instagram: <strong><a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a></strong>
+      * คุณเลือก VIP กรุณาติดต่อแอดมินทาง IG: 
+      <a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a>
     </div>
 
     <button type="submit">สมัครสมาชิก</button>
@@ -160,8 +140,8 @@
   const db = firebase.firestore();
 
   const registerForm = document.getElementById('registerForm');
-  const memberTypeSelect = document.getElementById('memberType');
   const vipWarning = document.getElementById('vipWarning');
+  const memberTypeSelect = document.getElementById('memberType');
   const messageDiv = document.getElementById('message');
 
   memberTypeSelect.addEventListener('change', () => {
@@ -169,7 +149,7 @@
   });
 
   function generateRefCode() {
-    return 'REF' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    return 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
   registerForm.addEventListener('submit', async (e) => {
@@ -183,7 +163,7 @@
     const memberType = memberTypeSelect.value;
 
     if (!fullname || !phone || !email || !username || !password || !memberType) {
-      messageDiv.innerText = "กรุณากรอกข้อมูลให้ครบถ้วน";
+      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
       return;
     }
 
@@ -204,15 +184,18 @@
       });
 
       messageDiv.innerHTML = `
-        <p>สมัครสมาชิกสำเร็จ! กรุณาส่งเลขอ้างอิงนี้ให้แอดมินทาง Instagram:</p>
+        <p>สมัครสมาชิกสำเร็จ!</p>
+        <p>เลขอ้างอิงของคุณ:</p>
         <h3>${refCode}</h3>
-        <p>Instagram: <a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a></p>
+        <p>กรุณาส่งเลขนี้ไปหาแอดมินที่ <a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a></p>
       `;
+      alert("สมัครสมาชิกสำเร็จ! เลขอ้างอิง: " + refCode);
       registerForm.reset();
       vipWarning.style.display = 'none';
+
     } catch (error) {
-      console.error("Error adding document: ", error);
-      messageDiv.innerText = "เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง";
+      console.error(error);
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
     }
   });
 </script>
