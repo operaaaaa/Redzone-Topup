@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 30px;
+}
+
+.logo {
+  width: 180px;
+  margin-top: 20px;
+  filter: drop-shadow(0 0 8px #ff3b3b);
+}
+
+h1 {
+  font-size: 24px;
+  color: #ff3b3b;
+  margin: 20px 0;
+  text-shadow: 0 0 10px #ff3b3b;
+}
+
+.wheel-container {
+  position: relative;
+  display: inline-block;
+}
+
+.form-section {
+  margin-top: 30px;
+}
+
+#username {
+  padding: 10px;
+  font-size: 16px;
+  width: 250px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  text-align: center;
+  background: #222;
+  color: white;
+  box-shadow: 0 0 10px #ff3b3b;
+}
+
+#spin {
+  padding: 15px 30px;
+  font-size: 18px;
+  background: #ff3b3b;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 20px #ff3b3b, 0 0 10px #ff3b3b inset;
+}
+
+#result {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #00ffae;
+  text-shadow: 0 0 10px #00ffae;
+}
+
+.ig {
+  margin-top: 40px;
+  font-size: 16px;
+  color: #ff3b3b;
+  text-shadow: 0 0 10px #ff3b3b;
+}
+
+.winner-section {
+  margin-top: 40px;
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 15px #ff3b3b55;
+}
+
+.winner-section h2 {
+  margin-bottom: 10px;
+  color: #ff3b3b;
+  text-shadow: 0 0 8px #ff3b3b;
+}
+
+#winner-list {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#winner-list li {
+  padding: 8px;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
+  color: white;
+}
+
+.ig-contact {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.ig-contact a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  gap: 10px;
+  text-shadow: 0 0 10px #ff3b3b;
+}
+
+.ig-contact img {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 5px #ff3b3b);
+}
