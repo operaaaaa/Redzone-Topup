@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>สมัครสมาชิก | RedZone TopUp</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .logo-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      text-align: right;
+    }
+
+    .logo-container img {
+      height: 60px;
+      margin-bottom: 5px;
+    }
+
+    .status-online {
+      display: inline-block;
+      background: #4caf50;
+      color: white;
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 80px auto 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e3c72;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #e53935;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #b71c1c;
+    }
+
+    .vip-warning {
+      color: #d32f2f;
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    #message h3 {
+      color: #e53935;
+      margin: 10px 0;
+    }
+
+    a {
+      color: #e53935;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .brand-title {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 5px;
+      color: #e53935;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<!-- โลโก้ร้าน + สถานะออนไลน์ -->
+<div class="logo-container">
+  <img src="logo.png" alt="RedZone Logo" />
+  <div class="status-online">● ออนไลน์</div>
+</div>
+
+<div class="container">
+  <div class="brand-title">RedZone TopUp</div>
+  <h2>สมัครสมาชิก</h2>
+
+  <form id="registerForm">
+    <input type="text" id="fullname" placeholder="ชื่อ-นามสกุล" required />
+    <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์" required />
+    <input type="email" id="email" placeholder="อีเมล" required />
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้" required />
+    <input type="password" id="password" placeholder="รหัสผ่าน" required />
+
+    <select id="memberType" required>
+      <option value="">-- เลือกประเภทสมาชิก --</option>
+      <option value="ธรรมดา">ธรรมดา</option>
+      <option value="VIP">VIP</option>
+    </select>
+
+    <div id="vipWarning" class="vip-warning">
+      * คุณเลือกเป็นสมาชิก VIP กรุณาติดต่อแอดมินผ่าน Instagram: <strong><a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a></strong>
+    </div>
+
+    <button type="submit">สมัครสมาชิก</button>
+  </form>
+
+  <div id="message"></div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxO_iCEiXDTdg_90bUkvqv6S4a3Mk9070",
+    authDomain: "redzone-topup-852a2.firebaseapp.com",
+    projectId: "redzone-topup-852a2",
+    storageBucket: "redzone-topup-852a2.firebasestorage.app",
+    messagingSenderId: "209606560486",
+    appId: "1:209606560486:web:d12baa8545d99adad14927",
+    measurementId: "G-T1WWTKDY79"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const registerForm = document.getElementById('registerForm');
+  const memberTypeSelect = document.getElementById('memberType');
+  const vipWarning = document.getElementById('vipWarning');
+  const messageDiv = document.getElementById('message');
+
+  memberTypeSelect.addEventListener('change', () => {
+    vipWarning.style.display = memberTypeSelect.value === 'VIP' ? 'block' : 'none';
+  });
+
+  function generateRefCode() {
+    return 'REF' + Math.random().toString(36).substring(2, 10).toUpperCase();
+  }
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fullname = document.getElementById('fullname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const memberType = memberTypeSelect.value;
+
+    if (!fullname || !phone || !email || !username || !password || !memberType) {
+      messageDiv.innerText = "กรุณากรอกข้อมูลให้ครบถ้วน";
+      return;
+    }
+
+    const refCode = generateRefCode();
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+      await db.collection('customers').add({
+        fullname,
+        phone,
+        email,
+        username,
+        password: hashedPassword,
+        memberType,
+        refCode,
+        approved: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      messageDiv.innerHTML = `
+        <p>สมัครสมาชิกสำเร็จ! กรุณาส่งเลขอ้างอิงนี้ให้แอดมินทาง Instagram:</p>
+        <h3>${refCode}</h3>
+        <p>Instagram: <a href="https://www.instagram.com/redzone_topup" target="_blank">@redzone_topup</a></p>
+      `;
+      registerForm.reset();
+      vipWarning.style.display = 'none';
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      messageDiv.innerText = "เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง";
+    }
+  });
+</script>
+
+</body>
+</html>
