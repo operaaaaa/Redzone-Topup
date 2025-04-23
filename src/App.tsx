@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Sparkles, Moon, Sun, Stars, Heart, Coins, ScrollText, Quote, Calendar, Clock } from 'lucide-react';
+const predictions = [
+  "วันนี้เป็นวันดี เริ่มต้นสิ่งใหม่ได้",
+  "อาจมีเรื่องเซอร์ไพรส์เข้ามา ให้เตรียมใจไว้",
+  "โอกาสเรื่องงานกำลังมาถึง",
+  "ควรดูแลสุขภาพมากขึ้นในช่วงนี้",
+];
 
+const dailyPrediction = predictions[Math.floor(Math.random() * predictions.length)];
 function App() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
