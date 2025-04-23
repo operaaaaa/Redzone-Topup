@@ -96,6 +96,9 @@ function App() {
   };
 
   return (
+<p className="text-center text-lg text-gray-600 italic mb-8">
+  คำทำนายประจำวันนี้: “{dailyPrediction}”
+</p>
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-purple-900 to-indigo-950">
       {/* Hero Section */}
       <header className="container mx-auto px-4 py-16 text-center">
@@ -275,6 +278,10 @@ function App() {
       <footer className="container mx-auto px-4 py-8 text-center text-purple-200">
         <p>© 2024 ศาสตร์แห่งดวงดาว. สงวนลิขสิทธิ์.</p>
       </footer>
+<a href="https://line.me/ti/p/mnRCCeUodj" target="_blank" rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full shadow-lg">
+  แชทผ่าน LINE
+</a>
     </div>
   );
 }
