@@ -128,7 +128,7 @@ function App() {
         <h2 className="text-3xl font-bold text-white text-center mb-12">เสียงจากลูกค้าของเรา</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white/5 backdrop-blur-lg rounded-xl p-6">
+<div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:scale-105 duration-300">
               <div className="flex items-center mb-4">
                 <img
                   src={testimonial.image}
